@@ -1,0 +1,41 @@
+const Relayer = require('./Relayer');
+const Web3 = require('web3');
+
+class InfuraRelayer extends Relayer {
+  constructor(infuraKey) {
+    super();
+    this.providerStrings = {
+      '1': `https://mainnet.infura.io/v3/${infuraKey}`,
+      '3': `https://ropsten.infura.io/v3/${infuraKey}`,
+    }
+    this.providers = {};
+  }
+
+  isAvailable() {
+    return true;
+  }
+
+  getNetworks() {
+    return ['1', '3', '4', '5', '42'];
+  }
+
+  _provider(network) {
+    if (!this.providers[network]) {
+      if (!this.providerStrings[network]) {
+        throw new Error(`Network ${network} not supported by InfuraRelayer`);
+      }
+      this.providers[network] = new Web3.providers.HttpProvider(this.providerStrings[network]);
+    }
+    return this.providers[network];
+  }
+
+  async send(network, { method, params, id }) {
+    if (this.getNetworks().indexOf(network) === -1) {
+      throw new Error('Infura does not support this network');
+    }
+    const response = await this._provider(network).send(method, params);
+    return response;
+  }
+}
+
+module.exports = InfuraRelayer;
