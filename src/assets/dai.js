@@ -4,6 +4,5 @@ module.exports = new ERC20Asset({
   id: 'dai',
   name: 'Dai',
   network: '1',
-  type: 'ERC20',
   address: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
 });

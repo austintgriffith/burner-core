@@ -9,6 +9,14 @@ class Asset {
   setCore(core) {
     this.core = core;
   }
+
+  async getBalance(account) {
+    throw new Error('getBalance not implemented');
+  }
+
+  async send({ from, to, value }) {
+    throw new Error('send not implemented');
+  }
 }
 
 module.exports = Asset;

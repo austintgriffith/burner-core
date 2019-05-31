@@ -20,12 +20,12 @@ class BurnerCore {
   }
 
   getAccounts() {
-    return this.signers.map(signer => signer.getAccounts()).flat();
+    return [].concat.apply([], this.signers.map(signer => signer.getAccounts()));
   }
 
   signTx(txParams) {
     for (const signer of this.signers) {
-      if (signer.asAccount(txParams.from)) {
+      if (signer.isAvailable() && signer.hasAccount(txParams.from)) {
         return signer.signTx(txParams);
       }
     }

@@ -13,12 +13,15 @@ class ProxyProvider {
 
     this.engine.addProvider(
       new HookedSubprovider({
-        getAccounts(cb) {
-          core.getAccounts()
-            .then(accounts => cb(null.accounts))
-            .catch(err => cb(err));
+        async getAccounts(cb) {
+          try {
+            cb(null, await core.getAccounts());
+          } catch (err) {
+            cb(err)
+          }
         },
         signTransaction(txParams, cb) {
+          txParams.chainId = network;
           core.signTx(txParams)
             .then(signedTx => cb(null, signedTx))
             .catch(err => cb(err))
