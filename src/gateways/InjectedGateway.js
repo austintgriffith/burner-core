@@ -13,11 +13,14 @@ class InjectedGateway extends Gateway {
     return window.ethereum || window.web3.currentProvider;
   }
 
-  send(network, message, params) {
+  send(network, payload) {
     if (network !== this._provider().networkVersion) {
       throw new Error('This Gateway does not support the provided network');
     }
-    return this._provider.send(message, params);
+    return new Promise((resolve, reject) =>
+      this._provider().sendAsync(payload, (err, { result, error }) =>
+        err || error ? reject(err || error) : resolve(result))
+    )
   }
 }
 
