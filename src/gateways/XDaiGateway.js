@@ -1,7 +1,7 @@
-const Relayer = require('./Relayer');
+const Gateway = require('./Gateway');
 const Web3 = require('web3');
 
-class xDaiRelayer extends Relayer {
+class xDaiGateway extends Gateway {
   isAvailable() {
     return true;
   }
@@ -23,4 +23,4 @@ class xDaiRelayer extends Relayer {
   }
 }
 
-module.exports = xDaiRelayer;
+module.exports = xDaiGateway;

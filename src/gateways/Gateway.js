@@ -1,4 +1,4 @@
-class Relayer {
+class Gateway {
   isAvailable() {
     return false;
   }
@@ -12,4 +12,4 @@ class Relayer {
   }
 }
 
-module.exports = Relayer;
+module.exports = Gateway;

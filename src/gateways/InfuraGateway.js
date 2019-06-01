@@ -1,7 +1,7 @@
-const Relayer = require('./Relayer');
+const Gateway = require('./Gateway');
 const Web3 = require('web3');
 
-class InfuraRelayer extends Relayer {
+class InfuraGateway extends Gateway {
   constructor(infuraKey) {
     super();
     this.providerStrings = {
@@ -22,7 +22,7 @@ class InfuraRelayer extends Relayer {
   _provider(network) {
     if (!this.providers[network]) {
       if (!this.providerStrings[network]) {
-        throw new Error(`Network ${network} not supported by InfuraRelayer`);
+        throw new Error(`Network ${network} not supported by InfuraGateway`);
       }
       this.providers[network] = new Web3.providers.HttpProvider(this.providerStrings[network]);
     }
@@ -38,4 +38,4 @@ class InfuraRelayer extends Relayer {
   }
 }
 
-module.exports = InfuraRelayer;
+module.exports = InfuraGateway;

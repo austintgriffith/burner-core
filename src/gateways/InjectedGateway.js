@@ -1,6 +1,6 @@
-const Relayer = require('./Relayer');
+const Gateway = require('./Gateway');
 
-class InjectedRelayer extends Relayer {
+class InjectedGateway extends Gateway {
   isAvailable() {
     return !!window.ethereum || !!(window.web3 && window.web3.currentProvider);
   }
@@ -15,10 +15,10 @@ class InjectedRelayer extends Relayer {
 
   send(network, message, params) {
     if (network !== this._provider().networkVersion) {
-      throw new Error('This relayer does not support the provided network');
+      throw new Error('This Gateway does not support the provided network');
     }
     return this._provider.send(message, params);
   }
 }
 
-module.exports = InjectedRelayer;
+module.exports = InjectedGateway;
