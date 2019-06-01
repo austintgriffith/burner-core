@@ -4,6 +4,7 @@ const Web3 = require('web3');
 class InfuraGateway extends Gateway {
   constructor(infuraKey) {
     super();
+    this.available = !!infuraKey;
     this.providerStrings = {
       '1': `https://mainnet.infura.io/v3/${infuraKey}`,
       '3': `https://ropsten.infura.io/v3/${infuraKey}`,
@@ -12,7 +13,7 @@ class InfuraGateway extends Gateway {
   }
 
   isAvailable() {
-    return true;
+    return this.available;
   }
 
   getNetworks() {

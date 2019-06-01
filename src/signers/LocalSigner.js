@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const Signer = require('./Signer');
 
 class LocalSigner extends Signer {
-  constructor({ privateKey }) {
+  constructor({ privateKey } = {}) {
     super();
     this.web3 = new Web3();
 

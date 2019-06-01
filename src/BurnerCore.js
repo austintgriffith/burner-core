@@ -1,18 +1,27 @@
-const ProxyProvider = require('./ProxyProvider');
 const Web3 = require('web3');
+const ProxyProvider = require('./ProxyProvider');
+const EventEmitter = require('./lib/EventEmitter');
 
 class BurnerCore {
   constructor({ signers=[], gateways=[], assets=[] }) {
     if (gateways.length === 0) {
-      throw new Error('Must include at least 1 relayer')
+      throw new Error('Must include at least 1 gateway')
     }
     this.signers = signers;
+    this.signers.forEach(signer => signer.onAccountChange(() => this.events.emit('accountChange')))
+
     this.gateways = gateways;
     this.assets = assets;
     this.assets.forEach(asset => asset.setCore(this));
 
     this.providers = {};
     this.web3 = {};
+
+    this.events = new EventEmitter();
+  }
+
+  onAccountChange(callback) {
+    this.events.on('accountChange', () => callback(this.getAccounts()));
   }
 
   getAssets() {
@@ -33,12 +42,12 @@ class BurnerCore {
   }
 
   handleRequest(network, payload) {
-    for (const relayer of this.gateways) {
-      if (relayer.getNetworks().indexOf(network) !== -1) {
-        return relayer.send(network, payload);
+    for (const gateway of this.gateways) {
+      if (gateway.isAvailable() && gateway.getNetworks().indexOf(network) !== -1) {
+        return gateway.send(network, payload);
       }
     }
-    throw new Error(`Could not find relayer for network ${network}`);
+    throw new Error(`Could not find gateway for network ${network}`);
   }
 
   getProvider(network) {

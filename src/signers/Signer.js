@@ -1,4 +1,10 @@
+const EventEmitter = require('../lib/EventEmitter');
+
 class Signer {
+  constructor() {
+    this.events = new EventEmitter();
+  }
+
   isAvailable() {
     return true;
   }
@@ -13,6 +19,10 @@ class Signer {
 
   signTx() {
     throw new Error('signTx() not implemented');
+  }
+
+  onAccountChange(callback) {
+    this.events.on('accountChange', callback);
   }
 }
 
