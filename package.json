@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "web3": "^1.0.0-beta.55",
-    "web3-provider-engine": "^15.0.0"
+    "web3-provider-engine": "^15.0.0",
+    "web3-utils": "^1.0.0-beta.55"
   },
   "devDependencies": {
     "chai": "^4.2.0",

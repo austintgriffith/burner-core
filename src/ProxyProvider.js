@@ -47,10 +47,13 @@ class ProxyProvider {
     this.engine.stop();
   }
 
-  handleRequest(payload, next, end) {
-    this.core.handleRequest(this.network, payload)
-      .then(result => end(null, result))
-      .catch(err => end(err));
+  async handleRequest(payload, next, end) {
+    try {
+      const result = await this.core.handleRequest(this.network, payload);
+      end(null, result);
+    } catch (err) {
+      end(err);
+    }
   }
 
   sendAsync(...args) {

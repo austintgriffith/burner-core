@@ -5,6 +5,9 @@ class InfuraGateway extends Gateway {
   constructor(infuraKey) {
     super();
     this.available = !!infuraKey;
+    if (!infuraKey) {
+      console.warn('Warning: InfuraGateway created without API Key. Infura will be unavailable.');
+    }
     this.providerStrings = {
       '1': `https://mainnet.infura.io/v3/${infuraKey}`,
       '3': `https://ropsten.infura.io/v3/${infuraKey}`,
