@@ -1,4 +1,5 @@
 const Web3 = require('web3');
+const cookies = require('../lib/cookies');
 const Signer = require('./Signer');
 
 class LocalSigner extends Signer {
@@ -9,7 +10,7 @@ class LocalSigner extends Signer {
     if (privateKey) {
       this._generateAccountFromPK(privateKey);
     } else {
-      this._generateNewAccount();
+      this._loadOrGenerateAccount();
     }
   }
 
@@ -26,12 +27,31 @@ class LocalSigner extends Signer {
     return rawTransaction;
   }
 
+  _loadOrGenerateAccount() {
+    const pk = (window.localStorage && localStorage.getItem('metaPrivateKey'))
+      || cookies.getCookie('metaPrivateKey');
+    if (pk) {
+      this._generateAccountFromPK(pk);
+    } else {
+      this._generateNewAccount();
+    }
+  }
+
   _generateAccountFromPK(privateKey) {
     this.account = (new Web3()).eth.accounts.privateKeyToAccount(privateKey);
+    this._saveAccount();
   }
 
   _generateNewAccount() {
     this.account = (new Web3()).eth.accounts.create();
+    this._saveAccount();
+  }
+
+  _saveAccount() {
+    if (window.localStorage) {
+      localStorage.setItem('metaPrivateKey', this.account.privateKey);
+    }
+    cookies.setCookie('metaPrivateKey', this.account.privateKey);
   }
 }
 
