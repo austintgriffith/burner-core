@@ -13,14 +13,22 @@ class Asset {
     this.core = core;
   }
 
+  async getTx(txHash) {
+    throw new Error('Not implemented');
+  }
+
+  getDisplayValue(value, decimals=2) {
+    const displayVal = fromWei(value.toString(), 'ether');
+    return displayVal.substr(0, displayVal.indexOf('.') + decimals + 1);
+  }
+
   async getBalance(account) {
     throw new Error('getBalance not implemented');
   }
 
   async getDisplayBalance(account, decimals=2) {
     const balance = await this.getBalance(account);
-    const nativeUnit = fromWei(balance, 'ether');
-    return nativeUnit.substr(0, nativeUnit.indexOf('.') + decimals + 1);
+    return this.getDisplayValue(balance, decimals);
   }
 
   async send({ from, to, value }) {
