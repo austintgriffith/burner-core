@@ -17,6 +17,10 @@ class InjectedSigner extends Signer {
     return this.accounts;
   }
 
+  hasAccount(account) {
+    return this.accounts.indexOf(this.web3.utils.toChecksumAddress(account)) !== -1;
+  }
+
   isAvailable() {
     return !!window.ethereum || !!(window.web3 && window.web3.currentProvider);
   }
