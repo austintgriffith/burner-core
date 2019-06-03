@@ -21,7 +21,7 @@ class ProxyProvider {
           }
         },
         signTransaction(txParams, cb) {
-          txParams.chainId = network;
+          txParams.chainId = +network;
           core.signTx(txParams)
             .then(signedTx => cb(null, signedTx))
             .catch(err => cb(err))

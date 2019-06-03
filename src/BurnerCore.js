@@ -64,7 +64,9 @@ class BurnerCore {
       return this.web3[network];
     }
 
-    this.web3[network] = new Web3(this.getProvider(network));
+    this.web3[network] = new Web3(this.getProvider(network), null, {
+      transactionConfirmationBlocks: 1,
+    });
     return this.web3[network];
   }
 

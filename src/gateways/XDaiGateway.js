@@ -19,6 +19,12 @@ class xDaiGateway extends Gateway {
       throw new Error('xDai does not support this network');
     }
     const response = await this._provider(network).send(method, params);
+
+    // Strange hack since the xdai relay seems to return a receipt for unmined txs
+    if (method === 'eth_getTransactionReceipt' && response && !response.blockNumber) {
+      return null;
+    }
+
     return response;
   }
 }
