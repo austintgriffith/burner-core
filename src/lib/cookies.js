@@ -7,7 +7,7 @@ module.exports.getCookie = function getCookie(key) {
         const oPair = cookie.split('=');
         const sKey = decodeURIComponent(oPair[0].trim().toLowerCase());
         const sValue = oPair.length>1?oPair[1]:'';
-        if(sKey == sName)
+        if(sKey == key)
             return decodeURIComponent(sValue);
     }
     return '';
