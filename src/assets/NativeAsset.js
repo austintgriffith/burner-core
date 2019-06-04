@@ -11,6 +11,8 @@ class NativeAsset extends Asset {
       params.value = toWei(params.ether, 'ether');
       delete params.ether;
     }
+    // TODO: Better gas calculation
+    params.gasPrice = params.gasPrice || '0x3b9aca00'; // 1 gwei
 
     return this.core.getWeb3(this.network).eth.sendTransaction(params);
   }
