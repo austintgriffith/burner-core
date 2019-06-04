@@ -1,7 +1,7 @@
 {
-  "name": "burner-core",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@burner-wallet/core",
+  "version": "0.0.1",
+  "main": "src/BurnerCore.js",
   "license": "MIT",
   "scripts": {
     "test": "mocha"

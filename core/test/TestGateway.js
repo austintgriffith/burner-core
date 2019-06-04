@@ -1,6 +1,6 @@
-const Relayer = require('../src/relayers/Relayer');
+const Gateway = require('../src/gateways/Gateway');
 
-class TestRelayer extends Relayer {
+class TestGateway extends Gateway {
   constructor() {
     super();
     this.responders = {
@@ -41,10 +41,10 @@ class TestRelayer extends Relayer {
 
   async send(network, { method, params, id }) {
     if (!this.responders[method]) {
-      throw new Error(`TestRelayer: No response for method ${method}`);
+      throw new Error(`TestGateway: No response for method ${method}`);
     }
     return this.responders[method](params);
   }
 }
 
-module.exports = TestRelayer;
+module.exports = TestGateway;

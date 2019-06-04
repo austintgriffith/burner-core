@@ -3,9 +3,10 @@ const cookies = require('../lib/cookies');
 const Signer = require('./Signer');
 
 class LocalSigner extends Signer {
-  constructor({ privateKey } = {}) {
+  constructor({ privateKey, saveKey=true } = {}) {
     super();
     this.web3 = new Web3();
+    this._saveKey = saveKey;
 
     if (privateKey) {
       this._generateAccountFromPK(privateKey);
@@ -48,6 +49,10 @@ class LocalSigner extends Signer {
   }
 
   _saveAccount() {
+    if (!this.saveKey) {
+      return;
+    }
+
     if (window.localStorage) {
       localStorage.setItem('metaPrivateKey', this.account.privateKey);
     }
