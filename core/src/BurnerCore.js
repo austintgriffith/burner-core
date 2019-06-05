@@ -29,7 +29,8 @@ class BurnerCore {
   }
 
   getAccounts() {
-    return [].concat.apply([], this.signers.map(signer => signer.getAccounts()));
+    const availableSigners = this.signers.filter(signer => signer.isAvailable());
+    return [].concat.apply([], availableSigners.map(signer => signer.getAccounts()));
   }
 
   signTx(txParams) {
