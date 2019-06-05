@@ -8,7 +8,7 @@ class LocalSigner extends Signer {
     this.web3 = new Web3();
     this._saveKey = saveKey;
 
-    if (privateKey) {
+    if (this._isValidPK(privateKey)) {
       this._generateAccountFromPK(privateKey);
     } else {
       this._loadOrGenerateAccount();
@@ -52,10 +52,14 @@ class LocalSigner extends Signer {
     }
   }
 
+  _isValidPK(pk) {
+    return !!pk && parseInt(pk) > 0;
+  }
+
   _loadOrGenerateAccount() {
     const pk = (window.localStorage && localStorage.getItem('metaPrivateKey'))
       || cookies.getCookie('metaPrivateKey');
-    if (pk) {
+    if (this._isValidPK(pk)) {
       this._generateAccountFromPK(pk);
     } else {
       this._generateNewAccount();
