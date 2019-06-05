@@ -28,6 +28,30 @@ class LocalSigner extends Signer {
     return rawTransaction;
   }
 
+  permissions() {
+    return ['readKey', 'writeKey', 'burn'];
+  }
+
+  invoke(action, account, ...params) {
+    if (!this.hasAccount(account)) {
+      throw new Error('Can not call invoke, incorrect account');
+    }
+
+    switch (action) {
+      case 'readKey':
+        return this.account.privateKey;
+      case 'writeKey':
+        const [newPK] = params;
+        this._generateAccountFromPK(newPK);
+        return this.account.address;
+      case 'burn':
+        this._generateNewAccount();
+        return this.account.address;
+      default:
+        throw new Error(`Unknown action ${action}`);
+    }
+  }
+
   _loadOrGenerateAccount() {
     const pk = (window.localStorage && localStorage.getItem('metaPrivateKey'))
       || cookies.getCookie('metaPrivateKey');

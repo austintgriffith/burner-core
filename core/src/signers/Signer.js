@@ -24,6 +24,14 @@ class Signer {
   onAccountChange(callback) {
     this.events.on('accountChange', callback);
   }
+
+  permissions() {
+    return [];
+  }
+
+  invoke(action, account) {
+    throw new Error('invoke not implemented');
+  }
 }
 
 module.exports = Signer;

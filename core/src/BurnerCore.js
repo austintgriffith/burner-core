@@ -70,6 +70,24 @@ class BurnerCore {
     return this.web3[network];
   }
 
+  canCallSigner(account, action) {
+    for (const signer of this.signers) {
+      if (signer.isAvailable() && signer.hasAccount(account)) {
+        return signer.permissions().indexOf(action) !== -1;
+      }
+    }
+    return false;
+  }
+
+  callSigner(action, account, ...params) {
+    for (const signer of this.signers) {
+      if (signer.isAvailable() && signer.hasAccount(account)) {
+        return signer.invoke(action, account, ...params);
+      }
+    }
+    throw new Error(`Unable to find signer for ${account}`);
+  }
+
   stop() {
     Object.values(this.providers).forEach(provider => provider.stop());
   }
