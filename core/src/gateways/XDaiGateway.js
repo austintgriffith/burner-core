@@ -16,7 +16,7 @@ class xDaiGateway extends Gateway {
 
   _provider(network) {
     if (!this._w3Provider) {
-      this._w3Provider = new Web3.providers.WebsocketProvider('wss://dai-trace-ws.blockscout.com/ws');
+      this._w3Provider = new Web3.providers.HttpProvider('https://dai.poa.network');;
     }
     return this._w3Provider;
   }
