@@ -2,6 +2,10 @@ const Gateway = require('./Gateway');
 const Web3 = require('web3');
 
 class xDaiGateway extends Gateway {
+  constructor() {
+    super();
+    this._w3Provider = null;
+  }
   isAvailable() {
     return true;
   }
@@ -11,7 +15,10 @@ class xDaiGateway extends Gateway {
   }
 
   _provider(network) {
-    return new Web3.providers.HttpProvider('https://dai.poa.network');
+    if (!this._w3Provider) {
+      this._w3Provider = new Web3.providers.WebsocketProvider('wss://dai-trace-ws.blockscout.com/ws');
+    }
+    return this._w3Provider;
   }
 
   async send(network, { method, params, id }) {

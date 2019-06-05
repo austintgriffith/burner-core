@@ -9,8 +9,8 @@ class InfuraGateway extends Gateway {
       console.warn('Warning: InfuraGateway created without API Key. Infura will be unavailable.');
     }
     this.providerStrings = {
-      '1': `https://mainnet.infura.io/v3/${infuraKey}`,
-      '3': `https://ropsten.infura.io/v3/${infuraKey}`,
+      '1': `wss://mainnet.infura.io/ws/v3/${infuraKey}`,
+      '3': `wss://ropsten.infura.io/ws/v3/${infuraKey}`,
     }
     this.providers = {};
   }
@@ -28,7 +28,7 @@ class InfuraGateway extends Gateway {
       if (!this.providerStrings[network]) {
         throw new Error(`Network ${network} not supported by InfuraGateway`);
       }
-      this.providers[network] = new Web3.providers.HttpProvider(this.providerStrings[network]);
+      this.providers[network] = new Web3.providers.WebsocketProvider(this.providerStrings[network]);
     }
     return this.providers[network];
   }
