@@ -49,10 +49,17 @@ class Asset {
     throw new Error('send not implemented');
   }
 
-  _startPricePolling() {
-    setInterval(async () => {
+  async _startPricePolling() {
+    this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
+    this.pollInterval = setInterval(async () => {
       this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
     }, PRICE_POLL_INTERVAL);
+  }
+
+  stop() {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+    }
   }
 }
 
