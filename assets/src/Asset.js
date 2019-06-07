@@ -45,6 +45,11 @@ class Asset {
     return this.getDisplayValue(balance, decimals);
   }
 
+  async getUSDBalance(account, decimals=2) {
+    const balance = await this.getBalance(account);
+    return this.getUSDValue(balance, decimals);
+  }
+
   async send({ from, to, value }) {
     throw new Error('send not implemented');
   }
