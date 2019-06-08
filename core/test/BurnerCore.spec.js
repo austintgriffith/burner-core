@@ -19,9 +19,9 @@ describe('BurnerCore', () => {
       expect(core.canCallSigner('readKey', 'invalidAccount')).to.be.false;
       expect(core.canCallSigner('invalidAction', TEST_ACCOUNT)).to.be.false;
 
-      expect(core.canCallSigner('readKey', TEST_ACCOUNT)).to.be.false;
-      expect(core.canCallSigner('writeKey', TEST_ACCOUNT)).to.be.false;
-      expect(core.canCallSigner('burn', TEST_ACCOUNT)).to.be.false;
+      expect(core.canCallSigner('readKey', TEST_ACCOUNT)).to.be.true;
+      expect(core.canCallSigner('writeKey', TEST_ACCOUNT)).to.be.true;
+      expect(core.canCallSigner('burn', TEST_ACCOUNT)).to.be.true;
     });
 
     it('should invoke the signer correctly', () => {

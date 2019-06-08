@@ -71,7 +71,7 @@ class BurnerCore {
     return this.web3[network];
   }
 
-  canCallSigner(account, action) {
+  canCallSigner(action, account) {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(account)) {
         return signer.permissions().indexOf(action) !== -1;
