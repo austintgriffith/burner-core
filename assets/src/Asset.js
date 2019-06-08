@@ -61,6 +61,10 @@ class Asset {
     }, PRICE_POLL_INTERVAL);
   }
 
+  getWeb3() {
+    return this.core.getWeb3(this.network);
+  }
+
   stop() {
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
