@@ -69,11 +69,13 @@ class LocalSigner extends Signer {
   _generateAccountFromPK(privateKey) {
     this.account = (new Web3()).eth.accounts.privateKeyToAccount(privateKey);
     this._saveAccount();
+    this.events.emit('accountChange');
   }
 
   _generateNewAccount() {
     this.account = (new Web3()).eth.accounts.create();
     this._saveAccount();
+    this.events.emit('accountChange');
   }
 
   _saveAccount() {
