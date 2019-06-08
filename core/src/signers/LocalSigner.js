@@ -79,7 +79,7 @@ class LocalSigner extends Signer {
   }
 
   _saveAccount() {
-    if (!this.saveKey) {
+    if (!this._saveKey) {
       return;
     }
 
