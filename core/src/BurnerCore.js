@@ -42,6 +42,15 @@ class BurnerCore {
     throw new Error('Unable to find an appropriate signer');
   }
 
+  shouldSkipSigning(network, txParams) {
+    for (const signer of this.signers) {
+      if (signer.isAvailable() && signer.hasAccount(txParams.from)) {
+        return signer.shouldSkipSigning();
+      }
+    }
+    throw new Error('Unable to find an appropriate signer');
+  }
+
   handleRequest(network, payload) {
     for (const gateway of this.gateways) {
       if (gateway.isAvailable() && gateway.getNetworks().indexOf(network) !== -1) {

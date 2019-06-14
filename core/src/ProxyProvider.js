@@ -11,6 +11,23 @@ class ProxyProvider {
 
     this.engine = new ProviderEngine();
 
+    this.engine.addProvider({
+      async handleRequest(payload, next, end) {
+        try {
+          if (payload.method === 'eth_sendTransaction'
+              && core.shouldSkipSigning(network, payload.params[0])) {
+            const result = await core.handleRequest(network, payload);
+            end(null, result);
+          } else {
+            next();
+          }
+        } catch (err) {
+          end(err);
+        }
+      },
+      setEngine() {},
+    });
+
     this.engine.addProvider(
       new HookedSubprovider({
         async getAccounts(cb) {
@@ -35,25 +52,27 @@ class ProxyProvider {
       })
     );
 
-    this.engine.addProvider(new NonceSubProvider())
+    //this.engine.addProvider(new GaspriceProvider());
+    this.engine.addProvider(new NonceSubProvider());
     this.engine.addProvider(new FiltersSubprovider());
-    this.engine.addProvider(this);
+
+    this.engine.addProvider({
+      async handleRequest(payload, next, end) {
+        try {
+          const result = await core.handleRequest(network, payload);
+          end(null, result);
+        } catch (err) {
+          end(err);
+        }
+      },
+      setEngine() {},
+    });
+
     this.engine.start();
   }
 
-  setEngine() {}
-
   stop() {
     this.engine.stop();
-  }
-
-  async handleRequest(payload, next, end) {
-    try {
-      const result = await this.core.handleRequest(this.network, payload);
-      end(null, result);
-    } catch (err) {
-      end(err);
-    }
   }
 
   sendAsync(...args) {

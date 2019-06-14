@@ -21,6 +21,10 @@ class Signer {
     throw new Error('signTx() not implemented');
   }
 
+  shouldSkipSigning() {
+    return false;
+  }
+
   onAccountChange(callback) {
     this.events.on('accountChange', callback);
   }
