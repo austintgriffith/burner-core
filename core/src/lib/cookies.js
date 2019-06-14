@@ -6,9 +6,10 @@ module.exports.getCookie = function getCookie(key) {
     {
         const oPair = cookie.split('=');
         const sKey = decodeURIComponent(oPair[0].trim().toLowerCase());
-        const sValue = oPair.length>1?oPair[1]:'';
-        if(sKey == key)
+        const sValue = oPair.length > 1 ? oPair[1] : '';
+        if(sKey == key.toLowerCase()) {
             return decodeURIComponent(sValue);
+        }
     }
     return '';
 }

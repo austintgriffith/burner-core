@@ -83,6 +83,11 @@ class LocalSigner extends Signer {
       return;
     }
 
+    const { privateKey } = this.account;
+    if (!privateKey || !/^0x[0-9a-fA-F]{64}$/.test(privateKey)) {
+      throw new Error(`Invalid Private Key "${privateKey}"`);
+    }
+
     if (window.localStorage) {
       localStorage.setItem('metaPrivateKey', this.account.privateKey);
     }
