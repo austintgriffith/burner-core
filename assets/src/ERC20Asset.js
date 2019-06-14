@@ -21,6 +21,10 @@ class ERC20Asset extends Asset {
     }
     return this._contract;
   }
+
+  _send({ from, to, value }) {
+    return this.getContract().methods.transfer(to, value).send({ from });
+  }
 }
 
 module.exports = ERC20Asset;

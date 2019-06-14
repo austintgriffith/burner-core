@@ -1,4 +1,4 @@
-const { fromWei } = require('web3-utils');
+const { fromWei, toWei } = require('web3-utils');
 const pricefeed = require('./pricefeed');
 
 const PRICE_POLL_INTERVAL = 15 * 1000;
@@ -50,7 +50,15 @@ class Asset {
     return this.getUSDValue(balance, decimals);
   }
 
-  async send({ from, to, value }) {
+  send(params) {
+    if (params.ether) {
+      params.value = toWei(params.ether, 'ether');
+      delete params.ether;
+    }
+    return this._send(params);
+  }
+
+  async _send({ from, to, value }) {
     throw new Error('send not implemented');
   }
 
