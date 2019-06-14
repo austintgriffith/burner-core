@@ -40,6 +40,10 @@ class InfuraGateway extends Gateway {
     const response = await this._provider(network).send(method, params);
     return response;
   }
+
+  stop() {
+    Object.values(this.providers).forEach(provider => provider.disconnect());
+  }
 }
 
 module.exports = InfuraGateway;

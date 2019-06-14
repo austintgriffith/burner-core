@@ -1,17 +1,20 @@
 const { expect } = require('chai');
 require('dotenv').config();
-const { dai, xdai, eth } = require('../../assets/');
 const BurnerCore = require('../src/BurnerCore');
 const InjectedGateway = require('../src/gateways/InjectedGateway');
 const LocalSigner = require('../src/signers/LocalSigner');
 
 describe('BurnerCore', () => {
+  let core;
+
+  afterEach(() => core && core.stop());
+
   describe('signer actions', () => {
     const TEST_PK = '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d5c9';
     const TEST_ACCOUNT = '0x82e1dd26775c36589ca39516b34f47cffc9066d1';
 
     it('should get appropriate permissions from the LocalSigner', () => {
-      const core = new BurnerCore({
+      core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
         gateways: [new InjectedGateway()],
       });
@@ -25,7 +28,7 @@ describe('BurnerCore', () => {
     });
 
     it('should invoke the signer correctly', () => {
-      const core = new BurnerCore({
+      core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
         gateways: [new InjectedGateway()],
       });

@@ -91,6 +91,7 @@ class BurnerCore {
 
   stop() {
     Object.values(this.providers).forEach(provider => provider.stop());
+    Object.values(this.gateways).forEach(gateway => gateway.stop());
     this.assets.forEach(asset => asset.stop && asset.stop());
   }
 }

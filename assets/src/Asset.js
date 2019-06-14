@@ -55,10 +55,10 @@ class Asset {
   }
 
   async _startPricePolling() {
-    this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
     this.pollInterval = setInterval(async () => {
       this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
     }, PRICE_POLL_INTERVAL);
+    this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
   }
 
   getWeb3() {
