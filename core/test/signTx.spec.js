@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 require('dotenv').config();
-const { eth } = require('../../assets/');
+const { eth } = require('@burner-wallet/assets');
 const BurnerCore = require('../src/BurnerCore');
 const LocalSigner = require('../src/signers/LocalSigner');
 const TestGateway = require('./TestGateway');

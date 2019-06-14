@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 require('dotenv').config();
-const { dai, xdai, eth } = require('../../assets/');
+const { dai, xdai, eth } = require('@burner-wallet/assets');
 const BurnerCore = require('../src/BurnerCore');
 const InfuraGateway = require('../src/gateways/InfuraGateway');
 const XDaiGateway = require('../src/gateways/XDaiGateway');
