@@ -1,6 +1,6 @@
 {
   "name": "@burner-wallet/assets",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "license": "MIT",
