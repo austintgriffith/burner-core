@@ -1,4 +1,4 @@
-interface AssetConstructor {
+export interface AssetConstructor {
   id: string,
   name: string,
   network: string,
