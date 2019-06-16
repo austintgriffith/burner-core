@@ -7,6 +7,10 @@ export interface AssetConstructor {
 }
 
 export default class Asset {
+  public id: string;
+  public name: string;
+  public network: string;
+
   constructor({ id, name, network, usdPrice, priceSymbol }: AssetConstructor);
   setCore(core: any): void;
   getTx(txHash: string): Promise<any>;
