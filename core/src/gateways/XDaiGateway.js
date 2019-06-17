@@ -31,6 +31,9 @@ class xDaiGateway extends Gateway {
     if (method === 'eth_getTransactionReceipt' && response && !response.blockNumber) {
       return null;
     }
+    if (method === 'eth_gasPrice' && response === '0x0') {
+      return '0x3b9aca00'; // 1 gwei
+    }
 
     return response;
   }
