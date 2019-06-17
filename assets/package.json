@@ -1,10 +1,9 @@
 {
   "name": "@burner-wallet/assets",
-  "version": "0.0.11",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "version": "0.0.12",
   "license": "MIT",
   "scripts": {
+    "distribute": "./scripts/publish.sh",
     "test": "echo \"Asset tests not defined\""
   },
   "dependencies": {
