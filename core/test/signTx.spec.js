@@ -18,6 +18,7 @@ describe('burner-core', () => {
       return '0x1';
     });
     testGateway.addResponder('eth_getTransactionReceipt', () => ({ status: '1' }));
+    testGateway.addResponder('eth_getTransactionCount', () => 0);
 
     const localSigner = new LocalSigner({
       privateKey: '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d5c9',
