@@ -3,6 +3,7 @@ const EventEmitter = require('../lib/EventEmitter');
 class Signer {
   constructor() {
     this.events = new EventEmitter();
+    this.accounts = [];
   }
 
   isAvailable() {
@@ -10,11 +11,13 @@ class Signer {
   }
 
   getAccounts() {
-    return [];
+    return this.accounts;
   }
 
   hasAccount(account) {
-    return false;
+    return this.getAccounts()
+      .map(address => address.toLowerCase())
+      .indexOf(account.toLowerCase()) !== -1;
   }
 
   signTx() {
