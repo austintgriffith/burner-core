@@ -1,9 +1,9 @@
 {
   "name": "@burner-wallet/core",
-  "version": "0.0.6",
-  "main": "src/BurnerCore.js",
+  "version": "0.0.7",
   "license": "MIT",
   "scripts": {
+    "distribute": "./scripts/publish.sh",
     "test": "mocha"
   },
   "dependencies": {
