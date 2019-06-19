@@ -8,7 +8,7 @@ interface ERC20Constructor extends AssetConstructor {
 export default class ERC20Asset extends Asset {
   public address: string;
 
-  constructor(props: AssetConstructor);
+  constructor(props: ERC20Constructor);
   allowance(from:string, to:string): Promise<string>;
   approve(from:string, to:string, value:string): Promise<any>;
 }

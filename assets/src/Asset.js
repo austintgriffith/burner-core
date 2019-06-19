@@ -25,7 +25,10 @@ class Asset {
 
   getDisplayValue(value, decimals=2) {
     const displayVal = fromWei(value.toString(), 'ether');
-    return displayVal.substr(0, displayVal.indexOf('.') + decimals + 1);
+    if (displayVal.indexOf('.') !== -1) {
+      return displayVal.substr(0, displayVal.indexOf('.') + decimals + 1);
+    }
+    return displayVal;
   }
 
   getUSDValue(value, decimals=2) {
