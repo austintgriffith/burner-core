@@ -11,6 +11,9 @@ class InfuraGateway extends Gateway {
     this.providerStrings = {
       '1': `wss://mainnet.infura.io/ws/v3/${infuraKey}`,
       '3': `wss://ropsten.infura.io/ws/v3/${infuraKey}`,
+      '4': `wss://rinkeby.infura.io/ws/v3/${infuraKey}`,
+      '5': `wss://goerli.infura.io/ws/v3/${infuraKey}`,
+      '42': `wss://kovan.infura.io/ws/v3/${infuraKey}`,
     }
     this.providers = {};
   }
