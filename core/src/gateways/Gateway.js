@@ -7,7 +7,7 @@ class Gateway {
     return [];
   }
 
-  send(network, message, params) {
+  send(network, params) {
     throw new Error('send() not implemented');
   }
 

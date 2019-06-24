@@ -25,7 +25,7 @@ class HTTPGateway extends Gateway {
   }
 
   async send(network, { method, params, id }) {
-    if (network !== thsi.networkId) {
+    if (network !== this.networkId) {
       throw new Error('HTTPGateway does not support this network');
     }
     const response = await this._provider(network).send(method, params);
