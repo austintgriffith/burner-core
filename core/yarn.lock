@@ -596,10 +596,10 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@burner-wallet/assets@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@burner-wallet/assets/-/assets-0.0.4.tgz#23460c878982b85f9f847fc60b4598706942f8c6"
-  integrity sha512-LYbDnNQe4GtG2NQDoCxzseGNZXWLxdXrgUJRG+lJCCnuqi5q4a5PUL+meSDTwr4DQa7PbOxV9oo/ZP7Cepiz5g==
+"@burner-wallet/assets@*":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@burner-wallet/assets/-/assets-0.0.14.tgz#e2a4afa3d89a91c100d90ee3a28c01aff5b45705"
+  integrity sha512-Jkt7zh09d8kKkElri6OsJT7oEq5oVEWLBdL4XlKEc2w/UzawEQXCeNcNA659bdjf+CKgsJIp2Eg/iJHcfLlcNw==
   dependencies:
     isomorphic-fetch "^2.2.1"
     web3-utils "^1.0.0-beta.55"
