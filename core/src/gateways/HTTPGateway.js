@@ -17,7 +17,7 @@ class HTTPGateway extends Gateway {
     return [this.networkId];
   }
 
-  _provider(network) {
+  _provider() {
     if (!this._w3Provider) {
       this._w3Provider = new Web3.providers.HttpProvider(this.rpcUrl);
     }
@@ -28,7 +28,7 @@ class HTTPGateway extends Gateway {
     if (network !== this.networkId) {
       throw new Error('HTTPGateway does not support this network');
     }
-    const response = await this._provider(network).send(method, params);
+    const response = await this._provider().send(method, params);
 
     return response;
   }
