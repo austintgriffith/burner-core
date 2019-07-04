@@ -14,6 +14,7 @@ export default class BurnerCore {
   getAssets(): Asset[];
   getAccounts(): string[];
   signTx(txParams: any): string;
+  signMsg(msg: string, account: string): string;
   shouldSkipSigning(network:string, txParams:any): boolean;
   handleRequest(network: string, payload: any): void;
   getProvider(network: string): any;

@@ -24,6 +24,10 @@ class Signer {
     throw new Error('signTx() not implemented');
   }
 
+  signMsg() {
+    throw new Error('singMsg() not implemented');
+  }
+
   shouldSkipSigning() {
     return false;
   }

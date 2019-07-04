@@ -41,13 +41,17 @@ class ProxyProvider {
           txParams.chainId = +network;
           core.signTx(txParams)
             .then(signedTx => cb(null, signedTx))
-            .catch(err => cb(err))
+            .catch(err => cb(err));
         },
         signMessage({ data, from }, cb) {
-          throw new Error('Message signing not implemented');
+          core.signMsg(data, from)
+            .then(signature => cb(null, signature))
+            .catch(err => cb(err));
         },
-        signPersonalMessage(...args) {
-          throw new Error('Message signing not implemented');
+        signPersonalMessage({ data, from }, cb) {
+          core.signMsg(data, from)
+            .then(signature => cb(null, signature))
+            .catch(err => cb(err));
         }
       })
     );

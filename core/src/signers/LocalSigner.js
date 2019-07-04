@@ -19,13 +19,13 @@ class LocalSigner extends Signer {
     return [this.account.address];
   }
 
-  hasAccount(account) {
-    return this.account.address.toLowerCase() === account.toLowerCase();
-  }
-
   async signTx(tx) {
     const { rawTransaction } = await this.account.signTransaction(tx);
     return rawTransaction;
+  }
+
+  signMsg(msg) {
+    return this.account.sign(msg).signature;
   }
 
   permissions() {
