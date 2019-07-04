@@ -1,4 +1,5 @@
 const Web3 = require('web3');
+const tabookey = require('tabookey-gasless');
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 
@@ -69,24 +70,32 @@ class BurnerCore {
     throw new Error(`Could not find gateway for network ${network}`);
   }
 
-  getProvider(network) {
-    if (this.providers[network]) {
-      return this.providers[network];
+  getProvider(network, options={}) {
+    const cacheKey = options.gasless ? `${network}-gasless` : network;
+    if (this.providers[cacheKey]) {
+      return this.providers[cacheKey];
     }
 
-    this.providers[network] = new ProxyProvider(network, this);
-    return this.providers[network];
+    let provider = new ProxyProvider(network, this);
+
+    if (options.gasless) {
+      provider = new tabookey.RelayProvider(provider, {});
+    }
+
+    this.providers[cacheKey] = provider;
+    return provider;
   }
 
-  getWeb3(network) {
-    if (this.web3[network]) {
-      return this.web3[network];
+  getWeb3(network, options={}) {
+    const cacheKey = options.gasless ? `${network}-gasless` : network;
+    if (this.web3[cacheKey]) {
+      return this.web3[cacheKey];
     }
 
-    this.web3[network] = new Web3(this.getProvider(network), null, {
+    this.web3[cacheKey] = new Web3(this.getProvider(network, options), null, {
       transactionConfirmationBlocks: 1,
     });
-    return this.web3[network];
+    return this.web3[cacheKey];
   }
 
   canCallSigner(action, account) {
