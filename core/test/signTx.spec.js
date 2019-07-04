@@ -13,7 +13,7 @@ describe('burner-core', () => {
   it('Should sign a send tx', (done) => {
     const testGateway = new TestGateway();
     testGateway.addResponder('eth_sendRawTransaction', ([signedTx]) => {
-      expect(signedTx).to.equal('0xf86780843b9aca00841000000094850656b87663c4a1ab9bcc16671e73acf2dc1db78203e88026a025ccc470a5c53f3a10d03a314a56af88604dbe7a082a0eadadbe4fe49275a04ba074fac66c9be5960da4c284f8b478dd4dfba87d56322b7464b8ae7974c63f429f');
+      expect(signedTx).to.equal('0xf8638001841000000094850656b87663c4a1ab9bcc16671e73acf2dc1db78203e88025a053e910ce12b687e9697ac704dfa12862d10a8d2b9857bee31dba0818c078d343a045fc73bd56035efa3c2baa15bc32cb8cc48fbd261ea678b769595ec3ef64944f');
       done();
       return '0x1';
     });
