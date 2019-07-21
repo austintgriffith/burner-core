@@ -21,6 +21,10 @@ class InjectedSigner extends Signer {
     return this.web3.eth.signTransaction(tx);
   }
 
+  signMsg(msg, account) {
+    return this.web3.eth.sign(msg, account);
+  }
+
   shouldSkipSigning() {
     return !!this._provider().isMetaMask;
   }
