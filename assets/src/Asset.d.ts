@@ -10,6 +10,7 @@ export default class Asset {
   public id: string;
   public name: string;
   public network: string;
+  public type: string | null;
 
   constructor({ id, name, network, usdPrice, priceSymbol }: AssetConstructor);
   setCore(core: any): void;

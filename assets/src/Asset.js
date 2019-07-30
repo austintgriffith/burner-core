@@ -4,12 +4,14 @@ const pricefeed = require('./pricefeed');
 const PRICE_POLL_INTERVAL = 15 * 1000;
 
 class Asset {
-  constructor({ id, name, network, usdPrice, priceSymbol }) {
+  constructor({ id, name, network, usdPrice, priceSymbol, type=null }) {
     this.id = id;
     this.name = name;
     this.network = network;
     this.usdPrice = usdPrice;
     this.priceSymbol = priceSymbol;
+    this.type = type;
+
     if (priceSymbol) {
       this._startPricePolling();
     }

@@ -1,6 +1,10 @@
 const Asset = require('./Asset');
 
 class NativeAsset extends Asset {
+  constructor(props) {
+    super({ ...props, type: 'native' });
+  }
+
   getBalance(account) {
     return this.core.getWeb3(this.network).eth.getBalance(account);
   }

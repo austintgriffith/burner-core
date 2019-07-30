@@ -2,8 +2,8 @@ const Asset = require('./Asset');
 const IERC20abi = require('./abi/IERC20.json');
 
 class ERC20Asset extends Asset {
-  constructor({ address, abi=IERC20abi, ...params }) {
-    super(params);
+  constructor({ address, abi=IERC20abi, type='erc20', ...params }) {
+    super({ ...params, type });
     this.address = address;
     this.abi = abi;
     this._contract = null;
