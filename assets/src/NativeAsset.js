@@ -6,19 +6,22 @@ class NativeAsset extends Asset {
   }
 
   getBalance(account) {
-    return this.core.getWeb3(this.network).eth.getBalance(account);
+    return this.getWeb3().eth.getBalance(account);
   }
 
-  _send(params) {
-    return this.core.getWeb3(this.network).eth.sendTransaction(params);
+  supportsMessages() {
+    return true;
+  }
+
+  _send({ message, ...params }) {
+    const web3 = this.getWeb3();
+    const data = message ? web3.utils.fromUtf8(message) : undefined;
+    return web3.eth.sendTransaction({ data, ...params });
   }
 
   async getTx(txHash) {
-    const web3 = this.core.getWeb3(this.network);
-    const [tx, receipt] = await Promise.all([
-      web3.eth.getTransaction(txHash),
-      web3.eth.getTransactionReceipt(txHash),
-    ]);
+    const web3 = this.getWeb3();
+    const tx = web3.eth.getTransaction(txHash);
 
     return {
       assetName: this.name,
@@ -26,6 +29,7 @@ class NativeAsset extends Asset {
       to: tx.to,
       value: tx.value,
       displayValue: this.getDisplayValue(tx.value),
+      message: tx.input.length > 2 ? web3.utils.toUtf8(tx.input) : null,
     };
   }
 }

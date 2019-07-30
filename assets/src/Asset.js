@@ -21,6 +21,10 @@ class Asset {
     this.core = core;
   }
 
+  supportsMessages() {
+    return false;
+  }
+
   async getTx(txHash) {
     throw new Error('Not implemented');
   }
