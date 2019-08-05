@@ -4,13 +4,15 @@
   "license": "MIT",
   "scripts": {
     "distribute": "./scripts/publish.sh",
-    "test": "echo \"Asset tests not defined\""
+    "test": "mocha"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "web3-utils": "^1.0.0-beta.55"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
     "typescript": "^3.5.2"
   }
 }
