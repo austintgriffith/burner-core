@@ -3,6 +3,7 @@ import ERC20Asset from './ERC20Asset';
 
 export { default as Asset } from './Asset';
 export { default as ERC20Asset } from './ERC20Asset';
+export { default as ERC777Asset } from './ERC777Asset';
 export { default as NativeAsset } from './NativeAsset';
 
 export const eth: Asset;
