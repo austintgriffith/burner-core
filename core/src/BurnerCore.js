@@ -79,7 +79,11 @@ class BurnerCore {
     let provider = new ProxyProvider(network, this);
 
     if (options.gasless) {
-      provider = new tabookey.RelayProvider(provider, { txfee: 12, force_gasLimit: 5000000 });
+      provider = new tabookey.RelayProvider(provider, {
+        txfee: 12,
+        force_gasLimit: 5000000,
+        force_gasPrice: 1100000000,
+      });
     }
 
     this.providers[cacheKey] = provider;
