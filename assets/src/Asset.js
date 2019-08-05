@@ -77,8 +77,8 @@ class Asset {
     this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
   }
 
-  getWeb3() {
-    return this.core.getWeb3(this.network);
+  getWeb3(options) {
+    return this.core.getWeb3(this.network, options);
   }
 
   stop() {

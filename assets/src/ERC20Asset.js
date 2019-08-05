@@ -30,6 +30,28 @@ class ERC20Asset extends Asset {
     return this.getContract().methods.approve(to, value).send({ from });
   }
 
+  async getTx(txHash) {
+    const events = await this._getEventsFromTx(txHash);
+    const [transferEvent] = events.filter(event => event.event === 'Transfer');
+
+    return {
+      assetName: this.name,
+      from: transferEvent.returnValues.from,
+      to: transferEvent.returnValues.to,
+      value: transferEvent.returnValues.amount.toString(),
+      displayValue: this.getDisplayValue(transferEvent.returnValues.amount.toString()),
+      message: null,
+    };
+  }
+
+  async _getEventsFromTx(txHash) {
+    const web3 = this.getWeb3();
+    const { blockNumber } = await web3.eth.getTransactionReceipt(txHash);
+    const events = await this.getContract().getPastEvents('allEvents', { fromBlock: blockNumber, toBlock: blockNumber });
+    console.log(events);
+    return events.filter(event => event.transactionHash === txHash);
+  }
+
   _send({ from, to, value }) {
     return this.getContract().methods.transfer(to, value).send({ from });
   }
