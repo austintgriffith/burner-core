@@ -38,8 +38,8 @@ class ERC20Asset extends Asset {
       assetName: this.name,
       from: transferEvent.returnValues.from,
       to: transferEvent.returnValues.to,
-      value: transferEvent.returnValues.amount.toString(),
-      displayValue: this.getDisplayValue(transferEvent.returnValues.amount.toString()),
+      value: transferEvent.returnValues.value.toString(),
+      displayValue: this.getDisplayValue(transferEvent.returnValues.value.toString()),
       message: null,
     };
   }
