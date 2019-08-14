@@ -6,7 +6,10 @@ const { LocalSigner, InjectedSigner } = require('../src/signers');
 
 describe('BurnerCore', () => {
   const TEST_PK = '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d5c9';
+  const TEST_PK_2 = '0xc95c6d20e8f998b2054d049862cbccfc18d22d5c994925e481cb81db7aae12fd';
+  const TEST_TX = '0x7a9b44fdf6b1aa6289846dba45ad66c870a60380fc44f77f79bb80d9d173d492';
   const TEST_ACCOUNT = '0x82e1dd26775c36589ca39516b34f47cffc9066d1';
+  const TEST_ACCOUNT_2 = '0x7501833200a6BC6052D6f42294fc85aE9db148eA';
 
   let core;
 
@@ -17,6 +20,7 @@ describe('BurnerCore', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
         gateways: [new InjectedGateway()],
+        historyOptions: { storeHistory: false },
       });
 
       expect(core.canCallSigner('readKey', 'invalidAccount')).to.be.false;
@@ -31,12 +35,13 @@ describe('BurnerCore', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
         gateways: [new InjectedGateway()],
+        historyOptions: { storeHistory: false },
       });
 
-      core.callSigner('writeKey', TEST_ACCOUNT, '0xc95c6d20e8f998b2054d049862cbccfc18d22d5c994925e481cb81db7aae12fd');
+      core.callSigner('writeKey', TEST_ACCOUNT, TEST_PK_2);
 
       const [newAccount] = core.getAccounts();
-      expect(newAccount).to.be.equal('0x7501833200a6BC6052D6f42294fc85aE9db148eA');
+      expect(newAccount).to.be.equal(TEST_ACCOUNT_2);
     });
   });
 
@@ -77,13 +82,56 @@ describe('BurnerCore', () => {
       core = new BurnerCore({
         signers: [new InjectedSigner()],
         gateways: [new InjectedGateway()],
+        historyOptions: { storeHistory: false },
       });
 
       setTimeout(() => core.getWeb3('1').eth.sendTransaction({
         from: TEST_ACCOUNT,
-        to: '0x7501833200a6BC6052D6f42294fc85aE9db148eA',
+        to: TEST_ACCOUNT_2,
         value: 1,
       }), 10);
     })
+  });
+
+  describe('history', () => {
+    it('should read and write events from history', () => {
+      core = new BurnerCore({
+        signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
+        gateways: [new InjectedGateway()],
+        historyOptions: { storeHistory: false },
+      });
+      const timestamp = Math.floor(Date.now() / 1000);
+
+      const checkEvent = (event) => {
+        expect(event.asset).to.equal('test');
+        expect(event.type).to.equal('send');
+        expect(event.amount).to.equal('100');
+        expect(event.from).to.equal(TEST_ACCOUNT);
+        expect(event.to).to.equal(TEST_ACCOUNT_2);
+        expect(event.tx).to.equal(TEST_TX);
+        expect(event.timestamp).to.equal(timestamp);
+      };
+
+      let gotCallback = false
+      core.onHistoryEvent(event => {
+        checkEvent(event);
+        gotCallback = true;
+      });
+
+      core.addHistoryEvent({
+        asset: 'test',
+        type: 'send',
+        amount: '100',
+        from: TEST_ACCOUNT,
+        to: TEST_ACCOUNT_2,
+        tx: TEST_TX,
+        timestamp,
+      });
+      expect(gotCallback).to.be.true;
+
+      const events = core.getHistoryEvents();
+      expect(events.length).to.equal(1);
+      checkEvent(events[0]);
+    });
   });
 });

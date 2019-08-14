@@ -28,6 +28,7 @@ describe('burner-core', () => {
       gateways: [testGateway],
       signers: [localSigner],
       assets: [eth],
+      historyOptions: { storeHistory: false },
     });
     eth.send({
       from: '0x82e1dD26775C36589CA39516B34f47cffc9066d1',

@@ -2,9 +2,11 @@ const Web3 = require('web3');
 const tabookey = require('tabookey-gasless');
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
+const History = require('./History');
+const HistoryEvent = require('./HistoryEvent');
 
 class BurnerCore {
-  constructor({ signers=[], gateways=[], assets=[] }) {
+  constructor({ signers=[], gateways=[], assets=[], historyOptions={} }) {
     if (gateways.length === 0) {
       throw new Error('Must include at least 1 gateway')
     }
@@ -19,6 +21,7 @@ class BurnerCore {
     this.web3 = {};
 
     this.events = new EventEmitter();
+    this.history = new History(historyOptions);
   }
 
   onAccountChange(callback) {
@@ -118,6 +121,20 @@ class BurnerCore {
       }
     }
     throw new Error(`Unable to find signer for ${account}`);
+  }
+
+
+  addHistoryEvent(eventProps) {
+    const event = new HistoryEvent(eventProps);
+    this.history.addEvent(event);
+  }
+
+  getHistoryEvents(options) {
+    return this.history.getEvents(options);
+  }
+
+  onHistoryEvent(listener) {
+    this.history.onEvent(listener);
   }
 
   stop() {

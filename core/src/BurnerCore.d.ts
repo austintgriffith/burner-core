@@ -1,6 +1,7 @@
 import { Asset } from '@burner-wallet/assets';
 import { Gateway } from './gateways';
 import { Signer } from './signers';
+import HistoryEvent, { HistoryEventProps } from './HistoryEvent';
 
 interface BurnerCoreConstructor {
   signers?: Signer[],
@@ -21,5 +22,10 @@ export default class BurnerCore {
   getWeb3(network: string): any;
   canCallSigner(action: string, account: string): boolean;
   callSigner(action: string, account: string, ...params: any[]): any;
+
+  addHistoryEvent(eventProps: HistoryEventProps): void;
+  getHistoryEvents(options: any): HistoryEvent[];
+  onHistoryEvent(listener: (event: HistoryEvent) => void): void;
+
   stop(): void;
 }
