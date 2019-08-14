@@ -44,6 +44,21 @@ class ERC20Asset extends Asset {
     };
   }
 
+  startWatchingAddress(address) {
+    const sub = this.getContract().events.Transfer({ filter: { to: address }})
+      .on('data', event => this.core.addHistoryEvent({
+        asset: this.id,
+        type: 'send',
+        amount: event.returnValues.value.toString(),
+        from: event.returnValues.from,
+        to: event.returnValues.to,
+        tx: event.transactionHash,
+        timestamp: Date.now() / 1000,
+      }))
+      .on('error', err => console.error(err));
+    return () => sub.unsubscribe();
+  }
+
   async _getEventsFromTx(txHash) {
     const web3 = this.getWeb3();
     const { blockNumber } = await web3.eth.getTransactionReceipt(txHash);
@@ -52,8 +67,12 @@ class ERC20Asset extends Asset {
     return events.filter(event => event.transactionHash === txHash);
   }
 
-  _send({ from, to, value }) {
-    return this.getContract().methods.transfer(to, value).send({ from });
+  async _send({ from, to, value }) {
+    const receipt = await this.getContract().methods.transfer(to, value).send({ from });
+    return {
+      ...receipt,
+      txHash: receipt.hash,
+    };
   }
 }
 

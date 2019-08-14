@@ -13,10 +13,14 @@ class NativeAsset extends Asset {
     return true;
   }
 
-  _send({ message, ...params }) {
+  async _send({ message, ...params }) {
     const web3 = this.getWeb3();
     const data = message ? web3.utils.fromUtf8(message) : undefined;
-    return web3.eth.sendTransaction({ data, ...params });
+    const receipt = await web3.eth.sendTransaction({ data, ...params });
+    return {
+      ...receipt,
+      txHash: receipt.transactionHash,
+    };
   }
 
   async getTx(txHash) {

@@ -58,12 +58,26 @@ class Asset {
     return this.getUSDValue(balance, decimals);
   }
 
-  send(params) {
+  startWatchingAddress(address) {
+    throw new Error('watching not implemented');
+  }
+
+  async send(params) {
     if (params.ether) {
       params.value = toWei(params.ether, 'ether');
       delete params.ether;
     }
-    return this._send(params);
+    const response = await this._send(params);
+    this.core.addHistoryEvent({
+      asset: this.id,
+      type: 'send',
+      amount: params.value,
+      from: params.from,
+      to: params.to,
+      tx: response.txHash,
+      timestamp: Date.now() / 1000,
+    });
+    return response;
   }
 
   async _send({ from, to, value }) {
