@@ -1,28 +1,34 @@
 class HistoryEvent {
-  constructor(props) {
+  constructor(props, assets) {
     this.asset = props.asset;
     this.receivingAsset = props.receivingAsset;
     this.type = props.type;
-    this.amount = props.amount;
+    this.value = props.value;
     this.message = props.message || null;
     this.from = props.from;
     this.to = props.to;
     this.tx = props.tx;
     this.timestamp = props.timestamp;
+
+    this.assets = assets;
+  }
+
+  getAsset() {
+    const [asset] = this.assets.filter(_asset => _asset.id === this.asset);
+    return asset || null;
+  }
+
+  getReceivingAsset() {
+    if (!this.receivingAsset) {
+      return null;
+    }
+    const [asset] = this.assets.filter(_asset => _asset.id === this.receivingAsset);
+    return asset || null;
   }
 
   toJSON() {
-    return JSON.stringify({
-      asset: this.asset,
-      receivingAsset: this.receivingAsset,
-      type: this.type,
-      amount: this.amount,
-      message: this.message,
-      from: this.from,
-      to: this.to,
-      tx: this.tx,
-      timestamp: this.timestamp,
-    });
+    const { assets, ...json } = this;
+    return json;
   }
 }
 

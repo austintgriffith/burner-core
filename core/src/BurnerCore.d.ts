@@ -26,6 +26,7 @@ export default class BurnerCore {
   addHistoryEvent(eventProps: HistoryEventProps): void;
   getHistoryEvents(options: any): HistoryEvent[];
   onHistoryEvent(listener: (event: HistoryEvent) => void): void;
+  removeHistoryEventListener(listener: (event: HistoryEvent) => void): void;
 
   stop(): void;
 }

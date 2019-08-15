@@ -10,7 +10,7 @@ export interface HistoryEventProps {
   timestamp: number,
 }
 
-export default HistoryEvent {
+export default class HistoryEvent {
   public asset: string,
   public receivingAsset?: string,
   public type: 'send' | 'exchange',

@@ -3,8 +3,9 @@ const HistoryEvent = require('./HistoryEvent');
 const STORAGE_KEY = 'burner-history';
 
 class History {
-  constructor({ storeHistory=true }={}) {
+  constructor({ storeHistory=true, assets=[] }={}) {
     this.events = [];
+    this.assets = assets;
     this.eventListeners = [];
     this.storeHistory = storeHistory;
     if (storeHistory) {
@@ -14,6 +15,10 @@ class History {
 
   onEvent(callback) {
     this.eventListeners.push(callback);
+  }
+
+  removeListener(callback) {
+    this.eventListeners.splice(this.eventListeners.indexOf(callback), 1);
   }
 
   addEvent(event) {
@@ -39,7 +44,10 @@ class History {
   readStoredEvents() {
     if (window.localStorage.getItem(STORAGE_KEY)) {
       const storedEventObjs = JSON.parse(window.localStorage.getItem(STORAGE_KEY));
-      this.events = [this.events, storedEvents.map(event => new HistoryEvent(event))];
+      this.events = [
+        ...this.events,
+        ...storedEventObjs.map(event => new HistoryEvent(event, this.assets)),
+      ];
     }
   }
 }

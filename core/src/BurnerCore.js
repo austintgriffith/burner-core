@@ -10,18 +10,39 @@ class BurnerCore {
     if (gateways.length === 0) {
       throw new Error('Must include at least 1 gateway')
     }
-    this.signers = signers;
-    this.signers.forEach(signer => signer.onAccountChange(() => this.events.emit('accountChange')))
-
-    this.gateways = gateways;
-    this.assets = assets;
-    this.assets.forEach(asset => asset.setCore(this));
 
     this.providers = {};
     this.web3 = {};
 
     this.events = new EventEmitter();
-    this.history = new History(historyOptions);
+    this.history = new History({ assets, ...historyOptions });
+
+    this.gateways = gateways;
+    this.assets = assets;
+    this.assets.forEach(asset => asset.setCore(this));
+
+    this.signers = signers;
+    this.unsubscribesBySigner = {};
+    this.signers.forEach((signer, index) => {
+      this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
+
+      signer.onAccountChange(() => {
+        this.unsubscribesBySigner[index].forEach(unsubscribe => unsubscribe());
+        this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
+        this.events.emit('accountChange');
+      });
+    });
+  }
+
+  watchAccounts(accounts) {
+    const unsubscribes = []
+    for (const account of accounts) {
+      for (const asset of this.assets) {
+        const unsubscribe = asset.startWatchingAddress(account);
+        unsubscribes.push(unsubscribe);
+      }
+    }
+    return unsubscribes;
   }
 
   onAccountChange(callback) {
@@ -125,7 +146,7 @@ class BurnerCore {
 
 
   addHistoryEvent(eventProps) {
-    const event = new HistoryEvent(eventProps);
+    const event = new HistoryEvent(eventProps, this.assets);
     this.history.addEvent(event);
   }
 
@@ -135,6 +156,10 @@ class BurnerCore {
 
   onHistoryEvent(listener) {
     this.history.onEvent(listener);
+  }
+
+  removeHistoryEventListener(listener) {
+    this.history.removeListener(listener);
   }
 
   stop() {
