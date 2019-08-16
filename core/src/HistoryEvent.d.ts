@@ -11,15 +11,15 @@ export interface HistoryEventProps {
 }
 
 export default class HistoryEvent {
-  public asset: string,
-  public receivingAsset?: string,
-  public type: 'send' | 'exchange',
-  public amount: string,
-  public from: string,
-  public to: string,
-  public message: string,
-  public tx: string,
-  public timestamp: number,
+  public asset: string;
+  public receivingAsset?: string;
+  public type: 'send' | 'exchange';
+  public amount: string;
+  public from: string;
+  public to: string;
+  public message: string;
+  public tx: string;
+  public timestamp: number;
 
   constructor(props: HistoryEventProps);
   toJSON(): string;
