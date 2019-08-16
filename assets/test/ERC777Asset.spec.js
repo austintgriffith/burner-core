@@ -1,14 +1,15 @@
 const { expect } = require('chai');
-const ERC20Asset = require('../src/ERC20Asset');
+const web3Utils = require('web3-utils');
+const ERC777Asset = require('../src/ERC777Asset');
 
 const ACCOUNT1 = '0x1010101010101010101010101010101010101010';
 const ACCOUNT2 = '0x0000000000000000000000000000000000000001';
 const TX_HASH = '0x376565f5614bd4483fd716c441aff43446b50f7772bef75496edef7faa070a85';
 const ONE_ETH = '1000000000000000000';
 
-describe('ERC20Asset', (done) => {
+describe('ERC777Asset', (done) => {
   it('should add an event when sent', (done) => {
-    const asset = new ERC20Asset({
+    const asset = new ERC777Asset({
       id: 'test',
       name: 'Test',
       network: '5777',
@@ -26,10 +27,11 @@ describe('ERC20Asset', (done) => {
         done();
       },
       getWeb3: () => ({
+        utils: web3Utils,
         eth: {
           Contract: function Contract() {
             this.methods = {
-              transfer(to, value) {
+              send(to, value, data) {
                 return {
                   send({ from }) {
                     return {
@@ -48,7 +50,7 @@ describe('ERC20Asset', (done) => {
   });
 
   it('should watch an address and add events for new transactions', (done) => {
-    const asset = new ERC20Asset({
+    const asset = new ERC777Asset({
       id: 'test',
       name: 'Test',
       network: '5777',
@@ -63,21 +65,24 @@ describe('ERC20Asset', (done) => {
         expect(event.from).to.equal(ACCOUNT2);
         expect(event.to).to.equal(ACCOUNT1);
         expect(event.tx).to.equal(TX_HASH);
+        expect(event.message).to.equal('Test');
         done();
       },
       getWeb3: () => ({
+        utils: web3Utils,
         eth: {
           getBlockNumber: () => 100,
           Contract: function Contract() {
             this.getPastEvents = (eventName, { filter }) => {
-              expect(eventName).to.equal('Transfer');
+              expect(eventName).to.equal('Sent');
               expect(filter.to).to.equal(ACCOUNT1);
               return [{
-                event: 'Transfer',
+                event: 'Sent',
                 returnValues: {
                   to: ACCOUNT1,
                   from: ACCOUNT2,
-                  value: ONE_ETH,
+                  data: '0x54657374',
+                  amount: ONE_ETH,
                 },
                 transactionHash: TX_HASH,
               }];

@@ -1,11 +1,15 @@
 const Asset = require('./Asset');
 const IERC20abi = require('./abi/IERC20.json');
 
+const BLOCK_LOOKBACK = 250;
+const POLL_INTERVAL = 2500;
+
 class ERC20Asset extends Asset {
-  constructor({ address, abi=IERC20abi, type='erc20', ...params }) {
+  constructor({ address, abi=IERC20abi, pollInterval=POLL_INTERVAL, type='erc20', ...params }) {
     super({ ...params, type });
     this.address = address;
     this.abi = abi;
+    this._pollInterval = pollInterval;
     this._contract = null;
   }
 
@@ -45,25 +49,55 @@ class ERC20Asset extends Asset {
   }
 
   startWatchingAddress(address) {
-    const sub = this.getContract().events.Transfer({ filter: { to: address }})
-      .on('data', event => this.core.addHistoryEvent({
-        asset: this.id,
-        type: 'send',
-        amount: event.returnValues.value.toString(),
-        from: event.returnValues.from,
-        to: event.returnValues.to,
-        tx: event.transactionHash,
-        timestamp: Date.now() / 1000,
-      }))
-      .on('error', err => console.error(err));
-    return () => sub.unsubscribe();
+    let running = true;
+
+    let block = 0;
+    const poll = async () => {
+      if (!running) {
+        return;
+      }
+      try {
+        const currentBlock = await this.getWeb3().eth.getBlockNumber();
+        if (block === 0) {
+          block = currentBlock - BLOCK_LOOKBACK;
+        }
+
+        const events = await this.getContract().getPastEvents('Transfer', {
+          filter: { to: address },
+          fromBlock: block,
+          toBlock: currentBlock,
+        });
+        events.forEach(event => this.core.addHistoryEvent({
+          asset: this.id,
+          type: 'send',
+          value: event.returnValues.value.toString(),
+          from: event.returnValues.from,
+          to: event.returnValues.to,
+          tx: event.transactionHash,
+          // TODO: timestamp,
+        }));
+
+        block = currentBlock;
+      } catch (e) {
+        console.warn('Polling Address failed', e);
+      }
+      setTimeout(poll, this._pollInterval);
+    };
+
+    poll();
+
+    const unsubscribe = () => {
+      running = false;
+    };
+    this.cleanupFunctions.push(unsubscribe);
+    return unsubscribe;
   }
+
 
   async _getEventsFromTx(txHash) {
     const web3 = this.getWeb3();
     const { blockNumber } = await web3.eth.getTransactionReceipt(txHash);
     const events = await this.getContract().getPastEvents('allEvents', { fromBlock: blockNumber, toBlock: blockNumber });
-    console.log(events);
     return events.filter(event => event.transactionHash === txHash);
   }
 

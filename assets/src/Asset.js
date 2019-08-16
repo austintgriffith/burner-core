@@ -73,7 +73,7 @@ class Asset {
     this.core.addHistoryEvent({
       asset: this.id,
       type: 'send',
-      amount: params.value,
+      value: params.value,
       from: params.from,
       to: params.to,
       tx: response.txHash,

@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const Web3 = require('web3');
+const web3Utils = require('web3-utils');
 const NativeAsset = require('../src/NativeAsset');
 
 const ACCOUNT1 = '0x1010101010101010101010101010101010101010';
@@ -8,11 +8,29 @@ const TX_HASH = '0x376565f5614bd4483fd716c441aff43446b50f7772bef75496edef7faa070
 const ONE_ETH = '1000000000000000000';
 
 describe('NativeAsset', () => {
+  let balance = '1000';
+  let blockNum = 100;
+  let blocks = {};
+  let transactions = {
+    [TX_HASH]: {
+      from: ACCOUNT1,
+      to: ACCOUNT2,
+      value: ONE_ETH,
+      input: '0x54657374',
+      hash: TX_HASH,
+    }
+  };
+
   const testCore = {
-    addHistoryEvent() {},
+    addHistoryEvent(event) {
+      testCore.onEvent && testCore.onEvent(event);
+    },
+    getHistoryEvents: () => [],
     getWeb3: () => ({
       eth: {
-        getBalance: () => '1000',
+        getBalance: () => balance,
+        getBlockNumber: () => blockNum,
+        getBlock: blockNum => blocks[blockNum] || null,
         sendTransaction: params => {
           testCore.onSend(params);
           return {
@@ -27,19 +45,18 @@ describe('NativeAsset', () => {
             logs: [],
           };
         },
-        getTransaction: () => ({
-          from: ACCOUNT1,
-          to: ACCOUNT2,
-          value: ONE_ETH,
-          input: '0x54657374',
-        })
+        getTransaction: hash => transactions[hash] || null,
       },
-      utils: Web3.utils,
+      utils: web3Utils,
     }),
   }
 
+  let asset;
+
+  afterEach(() => asset && asset.stop());
+
   it('should query balance', async () => {
-    const asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
+    asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
     asset.setCore(testCore);
 
     const balance = await asset.getBalance(ACCOUNT1);
@@ -62,7 +79,7 @@ describe('NativeAsset', () => {
   });
 
   it('should parse queried transactions', async () => {
-    const asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
+    asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
     asset.setCore(testCore);
 
     const tx = await asset.getTx(TX_HASH);
@@ -73,5 +90,30 @@ describe('NativeAsset', () => {
     expect(tx.value).to.equal(ONE_ETH);
     expect(tx.displayValue).to.equal('1');
     expect(tx.message).to.equal('Test');
+  });
+
+  it('should watch for receiving coins', (done) => {
+    asset = new NativeAsset({ id: 'test', name: 'Test', network: '1337', pollInterval: 50 });
+    asset.setCore(testCore);
+
+    testCore.onEvent = event => {
+      expect(event.asset).to.equal('test');
+      expect(event.type).to.equal('send');
+      expect(event.value).to.equal(ONE_ETH);
+      expect(event.from).to.equal(ACCOUNT1);
+      expect(event.to).to.equal(ACCOUNT2);
+      expect(event.tx).to.equal(TX_HASH);
+      done();
+    }
+
+    const unsubscribe = asset.startWatchingAddress(ACCOUNT2);
+
+    blockNum = 102;
+    balance = '1000000000000001000';
+    blocks[101] = {
+      transactions: [TX_HASH],
+      timestamp: Math.floor(Date.now() / 1000),
+    };
+    blocks[102] = { transactions: [] };
   });
 });
