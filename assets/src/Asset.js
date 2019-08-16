@@ -12,6 +12,8 @@ class Asset {
     this.priceSymbol = priceSymbol;
     this.type = type;
 
+    this.cleanupFunctions = [];
+
     if (priceSymbol) {
       this._startPricePolling();
     }
@@ -85,9 +87,11 @@ class Asset {
   }
 
   async _startPricePolling() {
-    this.pollInterval = setInterval(async () => {
+    const interval = setInterval(async () => {
       this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
     }, PRICE_POLL_INTERVAL);
+    this.cleanupFunctions.push(() => clearInterval(interval));
+
     this.usdPrice = await pricefeed.getPrice(this.priceSymbol);
   }
 
@@ -96,9 +100,7 @@ class Asset {
   }
 
   stop() {
-    if (this.pollInterval) {
-      clearInterval(this.pollInterval);
-    }
+    this.cleanupFunctions.forEach(fn => fn());
   }
 }
 
