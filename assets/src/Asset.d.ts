@@ -20,7 +20,7 @@ export default class Asset {
   getBalance(account: string): Promise<string>;
   getDisplayBalance(account: string, decimals?: number): Promise<string>;
   send(params: any): Promise<any>;
-  supportsMessages(): bool;
+  supportsMessages(): boolean;
   getWeb3(): any;
   stop(): void;
 }

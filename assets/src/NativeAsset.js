@@ -86,6 +86,7 @@ class NativeAsset extends Asset {
   }
 
   getBalanceDelta(address, startBlock, endBlock) {
+    const web3 = this.getWeb3();
     return this.core.getHistoryEvents({ asset: this.id, fromBlock: startBlock, toBlock: endBlock })
       .filter(event => event.to === address || event.from === address)
       .reduce((reducer, event) => event.to === address

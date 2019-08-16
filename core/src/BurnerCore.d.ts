@@ -19,7 +19,7 @@ export default class BurnerCore {
   shouldSkipSigning(network:string, txParams:any): boolean;
   handleRequest(network: string, payload: any): void;
   getProvider(network: string): any;
-  getWeb3(network: string): any;
+  getWeb3(network: string, options?: any): any;
   canCallSigner(action: string, account: string): boolean;
   callSigner(action: string, account: string, ...params: any[]): any;
 
