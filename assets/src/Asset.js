@@ -13,6 +13,8 @@ class Asset {
     this.priceSymbol = priceSymbol;
     this.type = type;
 
+    this.decimals = decimals;
+
     this.cleanupFunctions = [];
 
     if (priceSymbol) {
