@@ -1,10 +1,11 @@
 const { fromWei, toWei } = require('web3-utils');
 const pricefeed = require('./pricefeed');
+const { toDecimal } = require('./utils/decimals');
 
 const PRICE_POLL_INTERVAL = 15 * 1000;
 
 class Asset {
-  constructor({ id, name, network, usdPrice, priceSymbol, type=null }) {
+  constructor({ id, name, network, usdPrice, priceSymbol, type=null, decimals=18 }) {
     this.id = id;
     this.name = name;
     this.network = network;
@@ -32,7 +33,7 @@ class Asset {
   }
 
   getDisplayValue(value, decimals=2) {
-    const displayVal = fromWei(value.toString(), 'ether');
+    const displayVal = toDecimal(value.toString(), this.decimals);
     if (displayVal.indexOf('.') !== -1) {
       return displayVal.substr(0, displayVal.indexOf('.') + decimals + 1);
     }
