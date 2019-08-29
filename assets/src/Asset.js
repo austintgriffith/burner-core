@@ -80,6 +80,7 @@ class Asset {
       from: params.from,
       to: params.to,
       tx: response.txHash,
+      message: params.message || null,
       timestamp: Date.now() / 1000,
     });
     return response;
