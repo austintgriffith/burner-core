@@ -61,13 +61,18 @@ class ProxyProvider {
     this.engine.addProvider(new FiltersSubprovider());
 
     this.engine.addProvider({
-      async handleRequest(payload, next, end) {
-        try {
-          const result = await core.handleRequest(network, payload);
-          end(null, result);
-        } catch (err) {
-          end(err);
-        }
+      handleRequest(payload, next, end) {
+        core.handleRequest(network, payload)
+          .then(result => {
+            try {
+              end(null, result);
+            } catch (err) {
+              if (err.message !== 'Could not find block') {
+                throw err;
+              }
+            }
+          })
+          .catch(err => end(err));
       },
       setEngine() {},
     });
