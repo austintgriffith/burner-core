@@ -32,7 +32,8 @@ class History {
     if (options.asset) {
       events = events.filter(event => event.asset = options.asset);
     }
-    return events; //SORT
+    events = events.sort((e1, e2) => e2.timestamp - e1.timestamp);
+    return events;
   }
 
   storeEvents() {
