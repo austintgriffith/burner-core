@@ -1,8 +1,10 @@
+import { Asset } from '@burner-wallet/assets';
+
 export interface HistoryEventProps {
   asset: string,
   receivingAsset?: string,
   type: 'send' | 'exchange',
-  amount: string,
+  value: string,
   from: string,
   to: string,
   message?: string,
@@ -14,7 +16,7 @@ export default class HistoryEvent {
   public asset: string;
   public receivingAsset?: string;
   public type: 'send' | 'exchange';
-  public amount: string;
+  public value: string;
   public from: string;
   public to: string;
   public message: string;
@@ -23,4 +25,6 @@ export default class HistoryEvent {
 
   constructor(props: HistoryEventProps);
   toJSON(): string;
+  getAsset(): Asset;
+  getReceivingAsset(): Asset | null;
 }
