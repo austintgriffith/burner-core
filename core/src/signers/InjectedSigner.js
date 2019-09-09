@@ -10,6 +10,10 @@ class InjectedSigner extends Signer {
     if (this.isAvailable()) {
       this.web3 = new Web3(this._provider());
       this.updateAccounts();
+
+      if (window.ethereum && window.ethereum.enable) {
+        window.ethereum.enable().then(() => this.updateAccounts());
+      }
     }
   }
 
