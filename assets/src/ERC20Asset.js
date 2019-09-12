@@ -37,6 +37,9 @@ class ERC20Asset extends Asset {
   async getTx(txHash) {
     const events = await this._getEventsFromTx(txHash);
     const [transferEvent] = events.filter(event => event.event === 'Transfer');
+    if (!transferEvent) {
+      return null;
+    }
 
     return {
       assetName: this.name,
@@ -96,8 +99,14 @@ class ERC20Asset extends Asset {
 
   async _getEventsFromTx(txHash) {
     const web3 = this.getWeb3();
-    const { blockNumber } = await web3.eth.getTransactionReceipt(txHash);
-    const events = await this.getContract().getPastEvents('allEvents', { fromBlock: blockNumber, toBlock: blockNumber });
+    const receipt = await web3.eth.getTransactionReceipt(txHash);
+    if (!receipt) {
+      return [];
+    }
+    const events = await this.getContract().getPastEvents('allEvents', {
+      fromBlock: receipt.blockNumber,
+      toBlock: receipt.blockNumber,
+    });
     return events.filter(event => event.transactionHash === txHash);
   }
 

@@ -26,6 +26,9 @@ class ERC777Asset extends ERC20Asset {
   async getTx(txHash) {
     const events = await this._getEventsFromTx(txHash);
     const [transferEvent] = events.filter(event => event.event === 'Sent');
+    if (!transferEvent) {
+      return null;
+    }
 
     return {
       assetName: this.name,

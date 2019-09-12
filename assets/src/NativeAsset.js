@@ -107,6 +107,9 @@ class NativeAsset extends Asset {
   async getTx(txHash) {
     const web3 = this.getWeb3();
     const tx = await web3.eth.getTransaction(txHash);
+    if (!tx) {
+      return null;
+    }
 
     return {
       assetName: this.name,
