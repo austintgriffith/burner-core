@@ -6,6 +6,14 @@ export interface AssetConstructor {
   priceSymbol?: string,
 }
 
+export interface SendParams {
+  to: string;
+  from: string;
+  ether?: string;
+  value?: string;
+  message?: string | null;
+}
+
 export default class Asset {
   public id: string;
   public name: string;
@@ -19,7 +27,8 @@ export default class Asset {
   getUSDValue(value: string, decimals?: number): string;
   getBalance(account: string): Promise<string>;
   getDisplayBalance(account: string, decimals?: number): Promise<string>;
-  send(params: any): Promise<any>;
+  getMaximumSendableBalance(account: string): Promise<string>;
+  send(params: SendParams): Promise<any>;
   supportsMessages(): boolean;
   getWeb3(): any;
   stop(): void;

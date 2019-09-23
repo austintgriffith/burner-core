@@ -8,9 +8,7 @@ const TX_HASH = '0x376565f5614bd4483fd716c441aff43446b50f7772bef75496edef7faa070
 const ONE_ETH = '1000000000000000000';
 
 describe('NativeAsset', () => {
-  let balance = '1000';
-  let blockNum = 100;
-  let blocks = {};
+  let balance, asset, blockNum, blocks;
   let transactions = {
     [TX_HASH]: {
       from: ACCOUNT1,
@@ -31,6 +29,8 @@ describe('NativeAsset', () => {
         getBalance: () => balance,
         getBlockNumber: () => blockNum,
         getBlock: blockNum => blocks[blockNum] || null,
+        estimateGas: () => '21000',
+        getGasPrice: () => '20000000000',
         sendTransaction: params => {
           testCore.onSend(params);
           return {
@@ -51,7 +51,11 @@ describe('NativeAsset', () => {
     }),
   }
 
-  let asset;
+  beforeEach(() => {
+    balance = ONE_ETH;
+    blockNum = 100;
+    blocks = {};
+  });
 
   afterEach(() => asset && asset.stop());
 
@@ -59,8 +63,8 @@ describe('NativeAsset', () => {
     asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
     asset.setCore(testCore);
 
-    const balance = await asset.getBalance(ACCOUNT1);
-    expect(balance).to.equal('1000');
+    const _balance = await asset.getBalance(ACCOUNT1);
+    expect(_balance).to.equal(ONE_ETH);
   });
 
   it('should send a transaction', done => {
@@ -115,5 +119,13 @@ describe('NativeAsset', () => {
       timestamp: Math.floor(Date.now() / 1000),
     };
     blocks[102] = { transactions: [] };
+  });
+
+  it('should return the maximum sendable factoring in gas', async () => {
+    asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
+    asset.setCore(testCore);
+
+    const maxSendable = await asset.getMaximumSendableBalance(ACCOUNT1);
+    expect(maxSendable).to.equal('999580000000000000');
   });
 });

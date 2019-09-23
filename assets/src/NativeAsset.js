@@ -1,3 +1,4 @@
+const { toBN } = require('web3-utils');
 const Asset = require('./Asset');
 
 const POLL_INTERVAL = 2500;
@@ -92,6 +93,19 @@ class NativeAsset extends Asset {
       .reduce((reducer, event) => event.to === address
         ? web3.utils.toBN(reducer).add(web3.utils.toBN(event.value))
         : web3.utils.toBN(reducer).sub(web3.utils.toBN(event.value)), '0');
+  }
+
+  async getSendFee(from) {
+    const web3 = this.getWeb3();
+    const [gas, gasPrice] = await Promise.all([
+      web3.eth.estimateGas({
+        from,
+        to: '0x0000000000000000000000000000000000000000',
+        value: '1',
+      }),
+      web3.eth.getGasPrice(),
+    ]);
+    return toBN(gas).mul(toBN(gasPrice)).toString();
   }
 
   async _send({ message, ...params }) {

@@ -90,4 +90,28 @@ describe('ERC20Asset', (done) => {
     const unsubscribe = asset.startWatchingAddress(ACCOUNT1);
     unsubscribe();
   });
+
+  it('should return the maximum sendable value', async () => {
+    const asset = new ERC20Asset({
+      id: 'test',
+      name: 'Test',
+      network: '5777',
+      address: '0xcbfaa26289d24a6b4c5fe562bdd9a1b623260359',
+    });
+
+    asset.setCore({
+      getWeb3: () => ({
+        eth: {
+          Contract: function Contract() {
+            this.methods = {
+              balanceOf: () => ({ call: () => '1000' }),
+            };
+          },
+        },
+      })
+    });
+
+    const maxSendable = await asset.getMaximumSendableBalance(ACCOUNT1);
+    expect(maxSendable).to.equal('1000');
+  });
 });

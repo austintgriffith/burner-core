@@ -1,4 +1,4 @@
-const { fromWei, toWei } = require('web3-utils');
+const { fromWei, toWei, toBN } = require('web3-utils');
 const pricefeed = require('./pricefeed');
 const { toDecimal } = require('./utils/decimals');
 
@@ -84,6 +84,18 @@ class Asset {
       timestamp: Date.now() / 1000,
     });
     return response;
+  }
+
+  async getMaximumSendableBalance(address) {
+    const [balance, sendFee] = await Promise.all([
+      this.getBalance(address),
+      this.getSendFee(address),
+    ]);
+    return toBN(balance).sub(toBN(sendFee)).toString();
+  }
+
+  async getSendFee() {
+    return '0';
   }
 
   async _send({ from, to, value }) {
