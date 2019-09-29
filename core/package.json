@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@burner-wallet/assets": "*",
-    "tabookey-gasless": "0.3.3-a",
+    "tabookey-gasless": "^0.4.1",
     "web3": "1.0.0-beta.55",
     "web3-provider-engine": "15.0.3"
   },
