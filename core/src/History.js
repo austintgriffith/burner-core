@@ -28,12 +28,24 @@ class History {
   }
 
   getEvents(options={}) {
-    let events = this.events;
-    if (options.asset) {
-      events = events.filter(event => event.asset = options.asset);
+    let assets;
+    if (options.assets) {
+      assets = options.assets;
+    } else if (options.asset) {
+      assets = [options.asset];
     }
-    events = events.sort((e1, e2) => e2.timestamp - e1.timestamp);
-    return events;
+
+    const filter = event => {
+      const assetMatch = !assets || assets.indexOf(event.asset) !== -1;
+      const typeMatch = !options.type || event.type === options.type;
+      const accountMatch = !options.account
+        || options.account.toLowerCase() === event.to.toLowerCase()
+        || options.account.toLowerCase() === event.from.toLowerCase();
+
+      return assetMatch && typeMatch && accountMatch;
+    }
+
+    return this.events.filter(filter).sort((e1, e2) => e2.timestamp - e1.timestamp);
   }
 
   storeEvents() {
