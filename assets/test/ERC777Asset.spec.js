@@ -72,11 +72,13 @@ describe('ERC777Asset', (done) => {
         expect(event.to).to.equal(ACCOUNT1);
         expect(event.tx).to.equal(TX_HASH);
         expect(event.message).to.equal('Test');
+        expect(event.timestamp).to.equal(1571234034);
         done();
       },
       getWeb3: () => ({
         utils: web3Utils,
         eth: {
+          getBlock: () => ({ timestamp: 1571234034 }),
           getBlockNumber: () => 100,
           Contract: function Contract() {
             this.getPastEvents = (eventName, { filter }) => {

@@ -52,7 +52,6 @@ class ERC20Asset extends Asset {
   }
 
   startWatchingAddress(address) {
-
     let block = 0;
     return this.poll(async () => {
       const currentBlock = await this.getWeb3().eth.getBlockNumber();
@@ -65,7 +64,7 @@ class ERC20Asset extends Asset {
         fromBlock: block,
         toBlock: currentBlock,
       });
-      events.map(async (event) => this.core.addHistoryEvent({
+      await events.map(async (event) => this.core.addHistoryEvent({
         id: `${event.transactionHash}-${event.logIndex}`,
         asset: this.id,
         type: 'send',
@@ -73,7 +72,7 @@ class ERC20Asset extends Asset {
         from: event.returnValues.from,
         to: event.returnValues.to,
         tx: event.transactionHash,
-        // TODO: timestamp,
+        timestamp: await this._getBlockTimestamp(event.blockNumber),
       }));
 
       block = currentBlock;

@@ -57,7 +57,7 @@ class ERC777Asset extends ERC20Asset {
         fromBlock: block,
         toBlock: currentBlock,
       });
-      events.forEach(event => this.core.addHistoryEvent({
+      await events.map(async (event) => this.core.addHistoryEvent({
         id: `${event.transactionHash}-${event.logIndex}`,
         asset: this.id,
         type: 'send',
@@ -68,7 +68,7 @@ class ERC777Asset extends ERC20Asset {
           ? this.getWeb3().utils.toUtf8(event.returnValues.data)
           : null,
         tx: event.transactionHash,
-        // TODO: timestamp,
+        timestamp: await this._getBlockTimestamp(event.blockNumber),
       }));
 
       block = currentBlock;

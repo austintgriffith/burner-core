@@ -116,6 +116,11 @@ class Asset {
     return this.core.getWeb3(this.network, options);
   }
 
+  async _getBlockTimestamp(blockNum) {
+    const block = await this.getWeb3().eth.getBlock(blockNum);
+    return block.timestamp;
+  }
+
   stop() {
     this.cleanupFunctions.forEach(fn => fn());
   }

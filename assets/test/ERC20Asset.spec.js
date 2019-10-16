@@ -69,11 +69,13 @@ describe('ERC20Asset', (done) => {
         expect(event.from).to.equal(ACCOUNT2);
         expect(event.to).to.equal(ACCOUNT1);
         expect(event.tx).to.equal(TX_HASH);
+        expect(event.timestamp).to.equal(1571234034);
         done();
       },
       getWeb3: () => ({
         eth: {
           getBlockNumber: () => 100,
+          getBlock: () => ({ timestamp: 1571234034 }),
           Contract: function Contract() {
             this.getPastEvents = (eventName, { filter }) => {
               expect(eventName).to.equal('Transfer');
