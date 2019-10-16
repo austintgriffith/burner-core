@@ -75,4 +75,13 @@ describe('History', () => {
       expect(events[1]).to.equal(event2);
     });
   });
+
+  it('should prevent duplicate events from being added to the history', () => {
+    const history = new History({ storeHistory: false });
+    history.addEvent(event1);
+    history.addEvent(event1);
+
+    const events = history.getEvents();
+    expect(events.length).to.equal(1);
+  });
 });

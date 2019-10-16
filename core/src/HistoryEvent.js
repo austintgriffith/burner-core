@@ -1,5 +1,6 @@
 class HistoryEvent {
   constructor(props, assets) {
+    this.id = props.id || props.tx;
     this.asset = props.asset;
     this.receivingAsset = props.receivingAsset;
     this.type = props.type;
