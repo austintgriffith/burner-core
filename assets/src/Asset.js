@@ -74,6 +74,7 @@ class Asset {
     }
     const response = await this._send(params);
     this.core.addHistoryEvent({
+      id: response.id,
       asset: this.id,
       type: 'send',
       value: params.value,

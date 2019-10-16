@@ -24,6 +24,7 @@ describe('ERC777Asset', (done) => {
         expect(event.from).to.equal(ACCOUNT2);
         expect(event.to).to.equal(ACCOUNT1);
         expect(event.tx).to.equal(TX_HASH);
+        expect(event.id).to.equal(`${TX_HASH}-0`);
         done();
       },
       getWeb3: () => ({
@@ -36,6 +37,11 @@ describe('ERC777Asset', (done) => {
                   send({ from }) {
                     return {
                       hash: TX_HASH,
+                      events: {
+                        Sent: {
+                          logIndex: 0,
+                        },
+                      },
                     };
                   },
                 };

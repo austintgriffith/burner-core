@@ -72,6 +72,7 @@ class NativeAsset extends Asset {
         const tx = await web3.eth.getTransaction(txHash);
         if (tx.value !== '0' && tx.to.toLowerCase() === _address) {
           this.core.addHistoryEvent({
+            id: tx.hash,
             asset: this.id,
             type: 'send',
             value: tx.value,
@@ -115,6 +116,7 @@ class NativeAsset extends Asset {
     return {
       ...receipt,
       txHash: receipt.transactionHash,
+      id: receipt.transactionHash,
     };
   }
 

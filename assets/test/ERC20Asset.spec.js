@@ -22,6 +22,7 @@ describe('ERC20Asset', (done) => {
         expect(event.value).to.equal(ONE_ETH);
         expect(event.from).to.equal(ACCOUNT2);
         expect(event.to).to.equal(ACCOUNT1);
+        expect(event.id).to.equal(`${TX_HASH}-0`);
         expect(event.tx).to.equal(TX_HASH);
         done();
       },
@@ -34,6 +35,11 @@ describe('ERC20Asset', (done) => {
                   send({ from }) {
                     return {
                       hash: TX_HASH,
+                      events: {
+                        Transfer: {
+                          logIndex: 0,
+                        },
+                      },
                     };
                   },
                 };

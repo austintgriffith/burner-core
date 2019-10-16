@@ -62,7 +62,7 @@ class ERC20Asset extends Asset {
       try {
         const currentBlock = await this.getWeb3().eth.getBlockNumber();
         if (block === 0) {
-          block = currentBlock - BLOCK_LOOKBACK;
+          block = Math.max(currentBlock - BLOCK_LOOKBACK, 0);
         }
 
         const events = await this.getContract().getPastEvents('Transfer', {
@@ -71,6 +71,7 @@ class ERC20Asset extends Asset {
           toBlock: currentBlock,
         });
         events.forEach(event => this.core.addHistoryEvent({
+          id: `${event.transactionHash}-${event.logIndex}`,
           asset: this.id,
           type: 'send',
           value: event.returnValues.value.toString(),
@@ -115,6 +116,7 @@ class ERC20Asset extends Asset {
     return {
       ...receipt,
       txHash: receipt.hash,
+      id: `${receipt.hash}-${receipt.events.Transfer.logIndex}`,
     };
   }
 }

@@ -32,10 +32,10 @@ describe('NativeAsset', () => {
         estimateGas: () => '21000',
         getGasPrice: () => '20000000000',
         sendTransaction: params => {
-          testCore.onSend(params);
+          testCore.onSend && testCore.onSend(params);
           return {
             status: true,
-            transactionHash: "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+            transactionHash: TX_HASH,
             transactionIndex: 0,
             blockHash: "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
             blockNumber: 3,
@@ -55,6 +55,8 @@ describe('NativeAsset', () => {
     balance = ONE_ETH;
     blockNum = 100;
     blocks = {};
+    testCore.onEvent = null;
+    testCore.onSend = null;
   });
 
   afterEach(() => asset && asset.stop());
@@ -76,6 +78,24 @@ describe('NativeAsset', () => {
       expect(params.to).to.equal(ACCOUNT1);
       expect(params.value).to.equal(ONE_ETH);
       expect(params.data).to.equal('0x54657374');
+      done();
+    };
+
+    asset.send({ to: ACCOUNT1, from: ACCOUNT2, ether: '1', message: 'Test' });
+  });
+
+  it('should create an event after sending', done => {
+    const asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
+    asset.setCore(testCore);
+
+    testCore.onEvent = event => {
+      expect(event.asset).to.equal('test');
+      expect(event.type).to.equal('send');
+      expect(event.value).to.equal(ONE_ETH);
+      expect(event.to).to.equal(ACCOUNT1);
+      expect(event.from).to.equal(ACCOUNT2);
+      expect(event.tx).to.equal(TX_HASH);
+      expect(event.id).to.equal(TX_HASH);
       done();
     };
 
@@ -107,6 +127,7 @@ describe('NativeAsset', () => {
       expect(event.from).to.equal(ACCOUNT1);
       expect(event.to).to.equal(ACCOUNT2);
       expect(event.tx).to.equal(TX_HASH);
+      expect(event.id).to.equal(TX_HASH);
       done();
     }
 

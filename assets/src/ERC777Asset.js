@@ -62,6 +62,7 @@ class ERC777Asset extends ERC20Asset {
           toBlock: currentBlock,
         });
         events.forEach(event => this.core.addHistoryEvent({
+          id: `${event.transactionHash}-${event.logIndex}`,
           asset: this.id,
           type: 'send',
           value: event.returnValues.amount.toString(),
@@ -99,6 +100,7 @@ class ERC777Asset extends ERC20Asset {
     return {
       ...receipt,
       txHash: receipt.hash,
+      id: `${receipt.hash}-${receipt.events.Sent.logIndex}`,
     };
   }
 }
