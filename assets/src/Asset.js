@@ -119,6 +119,30 @@ class Asset {
   stop() {
     this.cleanupFunctions.forEach(fn => fn());
   }
+
+  poll(callback, interval) {
+    let running = true;
+
+    const loop = async () => {
+      if (!running) {
+        return;
+      }
+      try {
+        await callback();
+      } catch (e) {
+        console.warn('Error in loop', e);
+      }
+      setTimeout(loop, interval);
+    }
+
+    loop();
+
+    const unsubscribe = () => {
+      running = false;
+    };
+    this.cleanupFunctions.push(unsubscribe);
+    return unsubscribe;
+  }
 }
 
 module.exports = Asset;

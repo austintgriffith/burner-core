@@ -18,44 +18,26 @@ class NativeAsset extends Asset {
   }
 
   startWatchingAddress(address) {
-    let running = true;
-
     let block = 0;
     let balance = 0;
-    const poll = async () => {
-      if (!running) {
-        return;
-      }
-      try {
-        const web3 = this.getWeb3();
-        const [currentBlock, currentBalance] = await Promise.all([
-          web3.eth.getBlockNumber(),
-          web3.eth.getBalance(address),
-        ]);
+    return this.poll(async () => {
+      const web3 = this.getWeb3();
+      const [currentBlock, currentBalance] = await Promise.all([
+        web3.eth.getBlockNumber(),
+        web3.eth.getBalance(address),
+      ]);
 
-        if (block !== 0 && balance !== currentBalance) {
-          const offsetBalance = web3.utils.toBN(balance)
-            .add(web3.utils.toBN(this.getBalanceDelta(address, block + 1, currentBlock)));
-          if (offsetBalance !== currentBalance) {
-            await this.scanBlocks(address, block + 1, currentBlock)
-          }
+      if (block !== 0 && balance !== currentBalance) {
+        const offsetBalance = web3.utils.toBN(balance)
+          .add(web3.utils.toBN(this.getBalanceDelta(address, block + 1, currentBlock)));
+        if (offsetBalance !== currentBalance) {
+          await this.scanBlocks(address, block + 1, currentBlock)
         }
-
-        block = currentBlock;
-        balance = currentBalance;
-      } catch (e) {
-        console.warn('Polling Address failed', e);
       }
-      setTimeout(poll, this._pollInterval);
-    };
 
-    poll();
-
-    const unsubscribe = () => {
-      running = false;
-    };
-    this.cleanupFunctions.push(unsubscribe);
-    return unsubscribe;
+      block = currentBlock;
+      balance = currentBalance;
+    }, this._pollInterval);
   }
 
   async scanBlocks(address, startBlock, toBlock) {

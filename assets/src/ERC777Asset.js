@@ -46,49 +46,33 @@ class ERC777Asset extends ERC20Asset {
     let running = true;
 
     let block = 0;
-    const poll = async () => {
-      if (!running) {
-        return;
+    return this.poll(async () => {
+      const currentBlock = await this.getWeb3().eth.getBlockNumber();
+      if (block === 0) {
+        block = currentBlock - BLOCK_LOOKBACK;
       }
-      try {
-        const currentBlock = await this.getWeb3().eth.getBlockNumber();
-        if (block === 0) {
-          block = currentBlock - BLOCK_LOOKBACK;
-        }
 
-        const events = await this.getContract().getPastEvents('Sent', {
-          filter: { to: address },
-          fromBlock: block,
-          toBlock: currentBlock,
-        });
-        events.forEach(event => this.core.addHistoryEvent({
-          id: `${event.transactionHash}-${event.logIndex}`,
-          asset: this.id,
-          type: 'send',
-          value: event.returnValues.amount.toString(),
-          from: event.returnValues.from,
-          to: event.returnValues.to,
-          message: event.returnValues.data
-            ? this.getWeb3().utils.toUtf8(event.returnValues.data)
-            : null,
-          tx: event.transactionHash,
-          // TODO: timestamp,
-        }));
+      const events = await this.getContract().getPastEvents('Sent', {
+        filter: { to: address },
+        fromBlock: block,
+        toBlock: currentBlock,
+      });
+      events.forEach(event => this.core.addHistoryEvent({
+        id: `${event.transactionHash}-${event.logIndex}`,
+        asset: this.id,
+        type: 'send',
+        value: event.returnValues.amount.toString(),
+        from: event.returnValues.from,
+        to: event.returnValues.to,
+        message: event.returnValues.data
+          ? this.getWeb3().utils.toUtf8(event.returnValues.data)
+          : null,
+        tx: event.transactionHash,
+        // TODO: timestamp,
+      }));
 
-        block = currentBlock;
-      } catch (e) {
-        console.warn('Polling Address failed', e);
-      }
-      setTimeout(poll, this._pollInterval);
-    };
-
-    poll();
-
-    const unsubscribe = () => {
-      running = false;
-    };
-    this.cleanupFunctions.push(unsubscribe);
-    return unsubscribe;
+      block = currentBlock;
+    }, this._pollInterval);
   }
 
   async _send({ from, to, value, message }) {

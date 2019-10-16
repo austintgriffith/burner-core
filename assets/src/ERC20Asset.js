@@ -52,49 +52,32 @@ class ERC20Asset extends Asset {
   }
 
   startWatchingAddress(address) {
-    let running = true;
 
     let block = 0;
-    const poll = async () => {
-      if (!running) {
-        return;
+    return this.poll(async () => {
+      const currentBlock = await this.getWeb3().eth.getBlockNumber();
+      if (block === 0) {
+        block = Math.max(currentBlock - BLOCK_LOOKBACK, 0);
       }
-      try {
-        const currentBlock = await this.getWeb3().eth.getBlockNumber();
-        if (block === 0) {
-          block = Math.max(currentBlock - BLOCK_LOOKBACK, 0);
-        }
 
-        const events = await this.getContract().getPastEvents('Transfer', {
-          filter: { to: address },
-          fromBlock: block,
-          toBlock: currentBlock,
-        });
-        events.forEach(event => this.core.addHistoryEvent({
-          id: `${event.transactionHash}-${event.logIndex}`,
-          asset: this.id,
-          type: 'send',
-          value: event.returnValues.value.toString(),
-          from: event.returnValues.from,
-          to: event.returnValues.to,
-          tx: event.transactionHash,
-          // TODO: timestamp,
-        }));
+      const events = await this.getContract().getPastEvents('Transfer', {
+        filter: { to: address },
+        fromBlock: block,
+        toBlock: currentBlock,
+      });
+      events.map(async (event) => this.core.addHistoryEvent({
+        id: `${event.transactionHash}-${event.logIndex}`,
+        asset: this.id,
+        type: 'send',
+        value: event.returnValues.value.toString(),
+        from: event.returnValues.from,
+        to: event.returnValues.to,
+        tx: event.transactionHash,
+        // TODO: timestamp,
+      }));
 
-        block = currentBlock;
-      } catch (e) {
-        console.warn('Polling Address failed', e);
-      }
-      setTimeout(poll, this._pollInterval);
-    };
-
-    poll();
-
-    const unsubscribe = () => {
-      running = false;
-    };
-    this.cleanupFunctions.push(unsubscribe);
-    return unsubscribe;
+      block = currentBlock;
+    }, this._pollInterval);
   }
 
 
