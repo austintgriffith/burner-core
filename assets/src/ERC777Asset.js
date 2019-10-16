@@ -83,8 +83,8 @@ class ERC777Asset extends ERC20Asset {
     const receipt = await contract.methods.send(to, value, messageHex).send({ from });
     return {
       ...receipt,
-      txHash: receipt.hash,
-      id: `${receipt.hash}-${receipt.events.Sent.logIndex}`,
+      txHash: receipt.transactionHash,
+      id: `${receipt.transactionHash}-${receipt.events.Sent.logIndex}`,
     };
   }
 }

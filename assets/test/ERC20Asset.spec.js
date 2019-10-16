@@ -34,7 +34,7 @@ describe('ERC20Asset', (done) => {
                 return {
                   send({ from }) {
                     return {
-                      hash: TX_HASH,
+                      transactionHash: TX_HASH,
                       events: {
                         Transfer: {
                           logIndex: 0,

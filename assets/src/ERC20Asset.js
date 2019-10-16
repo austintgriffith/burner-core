@@ -98,8 +98,8 @@ class ERC20Asset extends Asset {
     const receipt = await this.getContract().methods.transfer(to, value).send({ from });
     return {
       ...receipt,
-      txHash: receipt.hash,
-      id: `${receipt.hash}-${receipt.events.Transfer.logIndex}`,
+      txHash: receipt.transactionHash,
+      id: `${receipt.transactionHash}-${receipt.events.Transfer.logIndex}`,
     };
   }
 }
