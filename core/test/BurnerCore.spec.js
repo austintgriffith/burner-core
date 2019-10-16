@@ -105,7 +105,7 @@ describe('BurnerCore', () => {
       const checkEvent = (event) => {
         expect(event.asset).to.equal('test');
         expect(event.type).to.equal('send');
-        expect(event.amount).to.equal('100');
+        expect(event.value).to.equal('100');
         expect(event.from).to.equal(TEST_ACCOUNT);
         expect(event.to).to.equal(TEST_ACCOUNT_2);
         expect(event.tx).to.equal(TEST_TX);
@@ -121,7 +121,7 @@ describe('BurnerCore', () => {
       core.addHistoryEvent({
         asset: 'test',
         type: 'send',
-        amount: '100',
+        value: '100',
         from: TEST_ACCOUNT,
         to: TEST_ACCOUNT_2,
         tx: TEST_TX,

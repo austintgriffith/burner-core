@@ -5,7 +5,7 @@ const BurnerCore = require('../src/BurnerCore');
 const InfuraGateway = require('../src/gateways/InfuraGateway');
 const XDaiGateway = require('../src/gateways/XDaiGateway');
 
-describe('burner-core', () => {
+describe('balance fetching', () => {
   let core;
 
   afterEach(() => core && core.stop());
@@ -17,8 +17,8 @@ describe('burner-core', () => {
       assets: [eth],
       historyOptions: { storeHistory: false },
     });
-    const balance = await eth.getBalance('0x863df6bfa4469f3ead0be8f9f2aae51c91a907b4');
-    expect(balance).is.equal('2524159265358979');
+    const balance = await eth.getBalance('0x0000000000000000000000000000000000000011');
+    expect(balance).is.equal('52010000000000');
   }).timeout(5000);
 
   it('Should fetch xDai balance', async () => {
@@ -39,7 +39,7 @@ describe('burner-core', () => {
       assets: [dai],
       historyOptions: { storeHistory: false },
     });
-    const balance = await dai.getBalance('0x68282da49ee6f3abbcc93a20ddc96e0e8b89d871');
-    expect(balance).is.equal('1500000000000000000');
+    const balance = await dai.getBalance('0xc0332b21a8ffe950c2632c65bcbde555b568562c');
+    expect(balance).is.equal('1');
   }).timeout(5000);
 });
