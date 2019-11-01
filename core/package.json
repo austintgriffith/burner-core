@@ -7,8 +7,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "@burner-wallet/assets": "*",
-    "tabookey-gasless": "^0.4.1",
+    "@burner-wallet/assets": "beta",
+    "tabookey-gasless": "tabookey/tabookey-gasless#d07bbfb",
     "web3": "^1.2.2",
     "web3-provider-engine": "15.0.3"
   },
