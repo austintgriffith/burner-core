@@ -1,9 +1,10 @@
 export interface AssetConstructor {
-  id: string,
-  name: string,
-  network: string,
-  usdPrice?: number,
-  priceSymbol?: string,
+  id: string;
+  name: string;
+  network: string;
+  usdPrice?: number;
+  priceSymbol?: string;
+  icon?: string;
 }
 
 export interface SendParams {
@@ -19,8 +20,9 @@ export default class Asset {
   public name: string;
   public network: string;
   public type: string | null;
+  public icon: string | null;
 
-  constructor({ id, name, network, usdPrice, priceSymbol }: AssetConstructor);
+  constructor(props: AssetConstructor);
   setCore(core: any): void;
   getTx(txHash: string): Promise<any>;
   getDisplayValue(value: string, decimals?: number): string;
@@ -31,5 +33,6 @@ export default class Asset {
   send(params: SendParams): Promise<any>;
   supportsMessages(): boolean;
   getWeb3(): any;
+  start(): void;
   stop(): void;
 }

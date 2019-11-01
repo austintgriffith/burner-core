@@ -5,13 +5,14 @@ const { toDecimal } = require('./utils/decimals');
 const PRICE_POLL_INTERVAL = 15 * 1000;
 
 class Asset {
-  constructor({ id, name, network, usdPrice, priceSymbol, type=null, decimals=18 }) {
+  constructor({ id, name, network, usdPrice, priceSymbol, icon=null, type=null, decimals=18 }) {
     this.id = id;
     this.name = name;
     this.network = network;
     this.usdPrice = usdPrice;
     this.priceSymbol = priceSymbol;
     this.type = type;
+    this.icon = icon;
 
     this.decimals = decimals;
 
