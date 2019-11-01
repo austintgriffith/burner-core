@@ -17,10 +17,6 @@ class Asset {
     this.decimals = decimals;
 
     this.cleanupFunctions = [];
-
-    if (priceSymbol) {
-      this._startPricePolling();
-    }
   }
 
   setCore(core) {
@@ -120,6 +116,12 @@ class Asset {
   async _getBlockTimestamp(blockNum) {
     const block = await this.getWeb3().eth.getBlock(blockNum);
     return block.timestamp;
+  }
+
+  start() {
+    if (this.priceSymbol) {
+      this._startPricePolling();
+    }
   }
 
   stop() {
