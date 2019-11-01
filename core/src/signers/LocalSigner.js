@@ -5,7 +5,6 @@ const Signer = require('./Signer');
 class LocalSigner extends Signer {
   constructor({ privateKey, saveKey=true } = {}) {
     super();
-    this.web3 = new Web3();
     this._saveKey = saveKey;
 
     if (this._isValidPK(privateKey)) {

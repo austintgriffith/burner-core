@@ -36,12 +36,19 @@ class InfuraGateway extends Gateway {
     return this.providers[network];
   }
 
-  async send(network, { method, params, id }) {
-    if (this.getNetworks().indexOf(network) === -1) {
-      throw new Error('Infura does not support this network');
-    }
-    const response = await this._provider(network).send(method, params);
-    return response;
+  send(network, payload) {
+    return new Promise((resolve, reject) => {
+      if (this.getNetworks().indexOf(network) === -1) {
+        return reject(new Error('Infura does not support this network'));
+      }
+      this._provider(network).send(payload, (err, response) => {
+        if (err || response.error) {
+          reject(err || response.error);
+        } else {
+          resolve(response.result);
+        }
+      })
+    });
   }
 
   stop() {

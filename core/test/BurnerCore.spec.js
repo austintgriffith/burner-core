@@ -55,20 +55,21 @@ describe('BurnerCore', () => {
         ethereum: {
           isMetaMask: true,
           networkVersion: '1',
-          sendAsync({ method, params }, cb) {
+          sendAsync({ method, params, id }, cb) {
+            const respond = result => cb(null, { jsonrpc: '2.0', result, id });
             switch(method) {
               case 'eth_accounts':
-                return cb(null, {result: [TEST_ACCOUNT]});
+                return respond([TEST_ACCOUNT]);
               case 'eth_blockNumber':
-                return cb(null, {result: 1});
+                return respond(1);
               case 'eth_gasPrice':
-                return cb(null, {result: '0x10000000'});
+                return respond('0x10000000');
               case 'eth_getBlockByNumber':
-                return cb(null, { result: { author: '', number: 0 }});
+                return respond({ author: '', number: 0 });
               case 'eth_getTransactionCount':
-                return cb(null, { result: 0 });
+                return respond(0);
               case 'eth_estimateGas':
-                return cb(null, { result: '0x10000000' });
+                return respond('0x10000000');
               case 'eth_signTransaction':
                 return done('Shouldn\'t sign transaction');
               case 'eth_sendTransaction':

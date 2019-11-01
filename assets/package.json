@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "web3-utils": "^1.0.0-beta.55"
+    "web3-utils": "^1.2.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",

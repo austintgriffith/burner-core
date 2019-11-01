@@ -123,9 +123,7 @@ class BurnerCore {
       return this.web3[cacheKey];
     }
 
-    this.web3[cacheKey] = new Web3(this.getProvider(network, options), null, {
-      transactionConfirmationBlocks: 1,
-    });
+    this.web3[cacheKey] = new Web3(this.getProvider(network, options));
     return this.web3[cacheKey];
   }
 

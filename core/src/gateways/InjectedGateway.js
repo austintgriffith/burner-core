@@ -14,13 +14,19 @@ class InjectedGateway extends Gateway {
   }
 
   send(network, payload) {
-    if (network !== this._provider().networkVersion) {
-      throw new Error('This Gateway does not support the provided network');
-    }
-    return new Promise((resolve, reject) =>
-      this._provider().sendAsync(payload, (err, { result, error }) =>
-        err || error ? reject(err || error) : resolve(result))
-    )
+    return new Promise((resolve, reject) => {
+      if (network !== this._provider().networkVersion) {
+        return reject(new Error('This Gateway does not support the provided network'));
+      }
+
+      this._provider().sendAsync(payload, (err, { result, error }) => {
+        if (err) {
+          reject(err || error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 }
 

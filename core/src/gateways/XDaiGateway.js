@@ -21,21 +21,29 @@ class xDaiGateway extends Gateway {
     return this._w3Provider;
   }
 
-  async send(network, { method, params, id }) {
-    if (network !== '100') {
-      throw new Error('xDai does not support this network');
-    }
-    const response = await this._provider(network).send(method, params);
+  send(network, payload) {
+    return new Promise((resolve, reject) => {
+      if (network !== '100') {
+        return reject(new Error('xDai does not support this network'));
+      }
 
-    // Strange hack since the xdai relay seems to return a receipt for unmined txs
-    if (method === 'eth_getTransactionReceipt' && response && !response.blockNumber) {
-      return null;
-    }
-    if (method === 'eth_gasPrice' && response === '0x0') {
-      return '0x3b9aca00'; // 1 gwei
-    }
+      this._provider(network).send(payload, (err, response) => {
+        if (err) {
+          return reject(err);
+        }
 
-    return response;
+        // Strange hack since the xdai relay seems to return a receipt for unmined txs
+        if (payload.method === 'eth_getTransactionReceipt' && response.result && !response.result.blockNumber) {
+          return resolve(null);
+        }
+        if (payload.method === 'eth_gasPrice' && response.result === '0x0') {
+          return resolve('0x3b9aca00'); // 1 gwei
+        }
+
+        return resolve(response.result);
+      });
+
+    });
   }
 }
 
