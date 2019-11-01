@@ -41,6 +41,19 @@ describe('History', () => {
     tx: TEST_TX_3,
     timestamp: '200',
   });
+  const overrideEvent = new HistoryEvent({
+    id: `${TEST_TX_1}-override`,
+    asset: 'test',
+    type: 'exchange',
+    value: '100000',
+    from: TEST_ACCOUNT_1,
+    tx: TEST_TX_1,
+    timestamp: '300',
+    override: true,
+    metaData: {
+      receivingAsset: 'test2',
+    },
+  })
 
   it('should sort events by timestamp', () => {
     const history = new History({ storeHistory: false });
@@ -80,6 +93,25 @@ describe('History', () => {
     const history = new History({ storeHistory: false });
     history.addEvent(event1);
     history.addEvent(event1);
+
+    const events = history.getEvents();
+    expect(events.length).to.equal(1);
+  });
+
+  it('should prevent overrided tx from being added to the history', () => {
+    const history = new History({ storeHistory: false });
+    history.addEvent(overrideEvent);
+    history.addEvent(event1);
+
+    const events = history.getEvents();
+    expect(events.length).to.equal(1);
+
+  });
+
+  it('should override history events with custom events', () => {
+    const history = new History({ storeHistory: false });
+    history.addEvent(event1);
+    history.addEvent(overrideEvent);
 
     const events = history.getEvents();
     expect(events.length).to.equal(1);

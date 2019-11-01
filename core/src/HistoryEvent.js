@@ -10,6 +10,8 @@ class HistoryEvent {
     this.to = props.to;
     this.tx = props.tx;
     this.timestamp = props.timestamp;
+    this.override = props.override || false;
+    this.metadata = props.metadata;
 
     this.assets = assets;
   }
@@ -30,6 +32,10 @@ class HistoryEvent {
   toJSON() {
     const { assets, ...json } = this;
     return json;
+  }
+
+  getDisplayValue() {
+    return this.getAsset().getDisplayValue(this.value);
   }
 }
 

@@ -5,6 +5,7 @@ const STORAGE_KEY = 'burner-history';
 class History {
   constructor({ storeHistory=true, assets=[] }={}) {
     this.events = [];
+    this.eventsByTx = {};
     this.eventsById = {};
     this.assets = assets;
     this.eventListeners = [];
@@ -24,12 +25,21 @@ class History {
 
   addEvent(event) {
     if (this.eventsById[event.id]) {
-      console.warn(`[History] Tried to add event with duplicate ID ${event.id}. Ignoring.`)
+      console.warn(`[History] Tried to add event with duplicate ID ${event.id}. Ignoring.`);
       return;
+    }
+    if (this.eventsByTx[event.tx]) {
+      if (event.override) {
+        this.events = this.events.filter(event => event.tx !== event.tx);
+      } else {
+        console.warn(`[History] Duplicate event with TX hash ${event.tx}. Ignoring.`);
+        return;
+      }
     }
 
     this.events.push(event);
     this.eventsById[event.id] = event;
+    this.eventsByTx[event.tx] = event;
     this.eventListeners.forEach(callback => callback(event));
     this.storeEvents();
   }
