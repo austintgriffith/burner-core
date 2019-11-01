@@ -31,6 +31,7 @@ class ERC777Asset extends ERC20Asset {
     }
 
     return {
+      asset: this.id,
       assetName: this.name,
       from: transferEvent.returnValues.from,
       to: transferEvent.returnValues.to,

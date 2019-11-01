@@ -110,6 +110,7 @@ class NativeAsset extends Asset {
     }
 
     return {
+      asset: this.id,
       assetName: this.name,
       from: tx.from,
       to: tx.to,

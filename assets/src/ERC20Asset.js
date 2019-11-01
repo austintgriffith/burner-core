@@ -42,6 +42,7 @@ class ERC20Asset extends Asset {
     }
 
     return {
+      asset: this.id,
       assetName: this.name,
       from: transferEvent.returnValues.from,
       to: transferEvent.returnValues.to,
