@@ -24,13 +24,21 @@ class HTTPGateway extends Gateway {
     return this._w3Provider;
   }
 
-  async send(network, { method, params, id }) {
-    if (network !== this.networkId) {
-      throw new Error('HTTPGateway does not support this network');
-    }
-    const response = await this._provider().send(method, params);
+  send(network, payload) {
+    return new Promise((resolve, reject) => {
+      if (network !== this.networkId) {
+        return reject(new Error('HTTPGateway does not support this network'));
+      }
 
-    return response;
+      this._provider(network).send(payload, (err, response) => {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve(response.result);
+      });
+
+    });
   }
 }
 

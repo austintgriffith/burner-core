@@ -35,12 +35,20 @@ class RivetGateway extends Gateway {
     return this.providers[network];
   }
 
-  async send(network, { method, params, id }) {
-    if (this.getNetworks().indexOf(network) === -1) {
-      throw new Error('Rivet does not support this network');
-    }
-    const response = await this._provider(network).send(method, params);
-    return response;
+  send(network, payload) {
+    return new Promise((resolve, reject) => {
+      if (this.getNetworks().indexOf(network) === -1) {
+        return reject(new Error(`Rivet Gateway does not support this network "${network}"`));
+      }
+
+      this._provider(network).send(payload, (err, response) => {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve(response.result);
+      });
+    });
   }
 }
 
