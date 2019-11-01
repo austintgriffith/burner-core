@@ -19,7 +19,10 @@ class BurnerCore {
 
     this.gateways = gateways;
     this.assets = assets;
-    this.assets.forEach(asset => asset.setCore(this));
+    this.assets.forEach(asset => {
+      asset.setCore(this);
+      asset.start();
+    });
 
     this.signers = signers;
     this.unsubscribesBySigner = {};
