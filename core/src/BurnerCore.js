@@ -21,7 +21,7 @@ class BurnerCore {
     this.assets = assets;
     this.assets.forEach(asset => {
       asset.setCore(this);
-      asset.start();
+      asset.start && asset.start();
     });
 
     this.signers = signers;
