@@ -40,6 +40,7 @@ class ERC777Asset extends ERC20Asset {
       message: transferEvent.returnValues.data
         ? this.getWeb3().utils.toUtf8(transferEvent.returnValues.data)
         : null,
+      timestamp: await this._getBlockTimestamp(transferEvent.blockNumber),
     };
   }
 

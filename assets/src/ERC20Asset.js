@@ -49,6 +49,7 @@ class ERC20Asset extends Asset {
       value: transferEvent.returnValues.value.toString(),
       displayValue: this.getDisplayValue(transferEvent.returnValues.value.toString()),
       message: null,
+      timestamp: await this._getBlockTimestamp(transferEvent.blockNumber),
     };
   }
 
