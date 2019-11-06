@@ -5,4 +5,5 @@ module.exports = new NativeAsset({
   name: 'ETH',
   network: '1',
   priceSymbol: 'ETH',
+  icon: 'https://static.burnerfactory.com/icons/eth.svg',
 });

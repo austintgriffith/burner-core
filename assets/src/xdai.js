@@ -5,4 +5,5 @@ module.exports = new NativeAsset({
   name: 'xDai',
   network: '100',
   usdPrice: 1,
+  icon: 'https://static.burnerfactory.com/icons/xdai.svg',
 });
