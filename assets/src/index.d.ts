@@ -9,3 +9,5 @@ export { default as NativeAsset } from './NativeAsset';
 export const eth: Asset;
 export const dai: ERC20Asset;
 export const xdai: Asset;
+export const keth: Asset;
+export const kdai: ERC20Asset;
