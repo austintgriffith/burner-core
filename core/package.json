@@ -1,13 +1,13 @@
 {
   "name": "@burner-wallet/core",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "license": "MIT",
   "scripts": {
     "distribute": "./scripts/publish.sh",
     "test": "mocha"
   },
   "dependencies": {
-    "@burner-wallet/assets": "beta",
+    "@burner-wallet/assets": "^1.0.0-beta.1",
     "tabookey-gasless": "tabookey/tabookey-gasless#d07bbfb",
     "web3": "^1.2.2",
     "web3-provider-engine": "15.0.3"
