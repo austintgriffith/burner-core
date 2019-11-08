@@ -117,7 +117,7 @@ class NativeAsset extends Asset {
       value: tx.value,
       displayValue: this.getDisplayValue(tx.value),
       message: tx.input.length > 2 ? web3.utils.toUtf8(tx.input) : null,
-      timestamp: await this._getBlockTimestamp(tx.blockNumber);
+      timestamp: await this._getBlockTimestamp(tx.blockNumber),
     };
   }
 }
