@@ -107,7 +107,7 @@ class BurnerCore {
 
     if (options.gasless) {
       provider = new tabookey.RelayProvider(provider, {
-        txfee: 12,
+        txfee: 70,
         force_gasLimit: 5000000,
         force_gasPrice: 1100000000,
       });

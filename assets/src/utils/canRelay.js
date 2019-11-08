@@ -8,9 +8,9 @@ module.exports = async function canRelay(web3, contractAddress, fromAddress) {
 
   try {
     const response = await contract.methods
-      .acceptRelayedCall(ZERO_ADDRESS, fromAddress, SAMPLE_DATA, '0', '0', '0x0', '0x0')
+      .acceptRelayedCall(ZERO_ADDRESS, fromAddress, SAMPLE_DATA, '12', '5000000', '1100000000', '0', '0x0', '0')
       .call();
-    return response.eq(0);
+    return response['0'] === '0';
   } catch (e) {
     return false;
   }
