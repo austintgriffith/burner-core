@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const tabookey = require('tabookey-gasless');
+const { GSNProvider } = require("@openzeppelin/gsn-provider");
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 const History = require('./History');
@@ -106,11 +106,7 @@ class BurnerCore {
     let provider = new ProxyProvider(network, this);
 
     if (options.gasless) {
-      provider = new tabookey.RelayProvider(provider, {
-        txfee: 70,
-        force_gasLimit: 5000000,
-        force_gasPrice: 1100000000,
-      });
+      provider = new GSNProvider(provider);
     }
 
     this.providers[cacheKey] = provider;

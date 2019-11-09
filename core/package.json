@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@burner-wallet/assets": "^1.0.0-beta.2",
-    "tabookey-gasless": "tabookey/tabookey-gasless#d07bbfb",
+    "@openzeppelin/gsn-provider": "^0.1.9",
     "web3": "^1.2.2",
     "web3-provider-engine": "15.0.3"
   },
