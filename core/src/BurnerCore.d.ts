@@ -2,12 +2,16 @@ import { Asset } from '@burner-wallet/assets';
 import Web3 from 'web3';
 import { Gateway } from './gateways';
 import { Signer } from './signers';
+import { HistoryProps } from './History';
 import HistoryEvent, { HistoryEventProps } from './HistoryEvent';
 
 interface BurnerCoreConstructor {
   signers?: Signer[],
   gateways?: Gateway[],
   assets?: Asset[],
+  historyOptions?: HistoryProps,
+  gsnGasLimit?: number,
+  gsnGasPrice?: number,
 }
 
 export default class BurnerCore {

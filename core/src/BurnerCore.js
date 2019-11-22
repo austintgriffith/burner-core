@@ -6,13 +6,23 @@ const History = require('./History');
 const HistoryEvent = require('./HistoryEvent');
 
 class BurnerCore {
-  constructor({ signers=[], gateways=[], assets=[], historyOptions={} }) {
+  constructor({
+    signers=[],
+    gateways=[],
+    assets=[],
+    historyOptions={},
+    gsnGasLimit=5000000,
+    gsnGasPrice=1100000000
+  }) {
     if (gateways.length === 0) {
       throw new Error('Must include at least 1 gateway')
     }
 
     this.providers = {};
     this.web3 = {};
+
+    this.gsnGasPrice = gsnGasPrice;
+    this.gsnGasLimit = gsnGasLimit;
 
     this.events = new EventEmitter();
     this.history = new History({ assets, ...historyOptions });
@@ -110,8 +120,8 @@ class BurnerCore {
     if (options.gasless) {
       provider = new tabookey.RelayProvider(provider, {
         txfee: 70,
-        force_gasLimit: 5000000,
-        force_gasPrice: 1100000000,
+        force_gasLimit: this.gsnGasLimit,
+        force_gasPrice: this.gsnGasPrice,
       });
     }
 
