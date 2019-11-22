@@ -27,6 +27,8 @@ class BurnerCore {
     this.signers = signers;
     this.unsubscribesBySigner = {};
     this.signers.forEach((signer, index) => {
+      signer.setCore(this);
+
       this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
 
       signer.onAccountChange(() => {

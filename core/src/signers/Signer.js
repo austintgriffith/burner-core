@@ -4,6 +4,11 @@ class Signer {
   constructor() {
     this.events = new EventEmitter();
     this.accounts = [];
+    this.core = null;
+  }
+
+  setCore(core) {
+    this.core = core;
   }
 
   isAvailable() {
