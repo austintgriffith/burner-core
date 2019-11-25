@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const tabookey = require('tabookey-gasless');
+const tabookey = require('@dmihal/tabookey-gasless');
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 const History = require('./History');
