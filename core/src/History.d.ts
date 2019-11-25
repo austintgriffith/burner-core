@@ -1,3 +1,5 @@
+import HistoryEvent from './HistoryEvent';
+
 export interface HistoryProps {
   storeHistory?: boolean,
 }
@@ -9,7 +11,7 @@ interface EventQuery {
 }
 
 export default class History {
-  constructor(props: HistoryEventProps);
+  constructor(props: HistoryProps);
   onEvent(callback: (event: HistoryEvent) => void): void;
   removeListener(callback: (event: HistoryEvent) => void): void;
   addEvent(event: HistoryEvent): void;

@@ -19,10 +19,10 @@ export default class BurnerCore {
   onAccountChange(callback: (accounts: string[]) => void): void;
   getAssets(): Asset[];
   getAccounts(): string[];
-  signTx(txParams: any): string;
-  signMsg(msg: string, account: string): string;
+  signTx(txParams: any): Promise<string>;
+  signMsg(msg: string, account: string): Promise<string>;
   shouldSkipSigning(network:string, txParams:any): boolean;
-  handleRequest(network: string, payload: any): void;
+  handleRequest(network: string, payload: any): Promise<void>;
   getProvider(network: string): any;
   getWeb3(network: string, options?: any): Web3;
   canCallSigner(action: string, account: string): boolean;

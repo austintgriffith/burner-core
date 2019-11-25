@@ -23,7 +23,7 @@ class LocalSigner extends Signer {
     return rawTransaction;
   }
 
-  signMsg(msg) {
+  async signMsg(msg) {
     return this.account.sign(msg).signature;
   }
 

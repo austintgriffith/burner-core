@@ -73,10 +73,11 @@ class BurnerCore {
     return [].concat.apply([], availableSigners.map(signer => signer.getAccounts()));
   }
 
-  signTx(txParams) {
+  async signTx(txParams) {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(txParams.from)) {
-        return signer.signTx(txParams);
+        const signed = await signer.signTx(txParams);
+        return signed;
       }
     }
     throw new Error('Unable to find an appropriate signer');
@@ -85,7 +86,8 @@ class BurnerCore {
   async signMsg(msg, account) {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(account)) {
-        return signer.signMsg(msg, account);
+        const signed = await signer.signMsg(msg, account);
+        return signed;
       }
     }
     throw new Error('Unable to find an appropriate signer');
@@ -100,10 +102,11 @@ class BurnerCore {
     throw new Error('Unable to find an appropriate signer');
   }
 
-  handleRequest(network, payload) {
+  async handleRequest(network, payload) {
     for (const gateway of this.gateways) {
       if (gateway.isAvailable() && gateway.getNetworks().indexOf(network) !== -1) {
-        return gateway.send(network, payload);
+        const response = await gateway.send(network, payload);
+        return response;
       }
     }
     throw new Error(`Could not find gateway for network ${network}`);
