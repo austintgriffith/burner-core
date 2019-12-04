@@ -1,10 +1,11 @@
 const EventEmitter = require('../lib/EventEmitter');
 
 class Signer {
-  constructor() {
+  constructor({ id=null }={}) {
     this.events = new EventEmitter();
     this.accounts = [];
     this.core = null;
+    this.id = id;
   }
 
   setCore(core) {

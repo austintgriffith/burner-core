@@ -43,6 +43,22 @@ describe('BurnerCore', () => {
       const [newAccount] = core.getAccounts();
       expect(newAccount).to.be.equal(TEST_ACCOUNT_2);
     });
+
+    it('should invoke signer actions by ID', () => {
+      core = new BurnerCore({
+        signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
+        gateways: [new InjectedGateway()],
+        historyOptions: { storeHistory: false },
+      });
+
+      expect(core.canCallSigner('writeKey', 'local')).to.be.true;
+
+      core.callSigner('writeKey', 'local', TEST_ACCOUNT, TEST_PK_2);
+
+      const [newAccount] = core.getAccounts();
+      expect(newAccount).to.be.equal(TEST_ACCOUNT_2);
+
+    });
   });
 
   describe('MetaMask', () => {

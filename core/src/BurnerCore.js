@@ -144,7 +144,7 @@ class BurnerCore {
 
   canCallSigner(action, account) {
     for (const signer of this.signers) {
-      if (signer.isAvailable() && signer.hasAccount(account)) {
+      if (account === signer.id || (signer.isAvailable() && signer.hasAccount(account))) {
         return signer.permissions().indexOf(action) !== -1;
       }
     }
@@ -155,6 +155,9 @@ class BurnerCore {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(account)) {
         return signer.invoke(action, account, ...params);
+      }
+      if (account === signer.id) {
+        return signer.invoke(action, ...params);
       }
     }
     throw new Error(`Unable to find signer for ${account}`);

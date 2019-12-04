@@ -1,10 +1,16 @@
 import BurnerCore from '../BurnerCore';
 import EventEmitter from '../lib/EventEmitter';
 
+export interface SignerOptions {
+  id?: string;
+}
+
 export default class Signer {
   protected events: EventEmitter;
   protected accounts: string[];
   protected core: BurnerCore | null;
+
+  constructor(options?: SignerOptions);
 
   setCore(core: BurnerCore): void;
   isAvailable(): boolean;
