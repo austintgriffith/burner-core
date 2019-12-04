@@ -5,6 +5,7 @@ module.exports.NativeAsset = require('./NativeAsset');
 
 module.exports.dai = require('./dai');
 module.exports.eth = require('./eth');
+module.exports.sai = require('./sai');
 module.exports.xdai = require('./xdai');
 module.exports.keth = require('./keth');
 module.exports.kdai = require('./kdai');
