@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 require('dotenv').config();
-const { dai, xdai, eth } = require('@burner-wallet/assets');
+const { sai, xdai, eth } = require('@burner-wallet/assets');
 const BurnerCore = require('../src/BurnerCore');
 const InfuraGateway = require('../src/gateways/InfuraGateway');
 const XDaiGateway = require('../src/gateways/XDaiGateway');
@@ -32,14 +32,16 @@ describe('balance fetching', () => {
     expect(balance).is.equal('10000000000000000000');
   }).timeout(5000);
 
-  it('Should fetch Dai balance', async () => {
+  it('Should fetch Dai balance');
+
+  it('Should fetch Sai balance', async () => {
     const infuraGateway = new InfuraGateway(process.env.INFURA_KEY);
     core = new BurnerCore({
       gateways: [infuraGateway],
-      assets: [dai],
+      assets: [sai],
       historyOptions: { storeHistory: false },
     });
-    const balance = await dai.getBalance('0xc0332b21a8ffe950c2632c65bcbde555b568562c');
+    const balance = await sai.getBalance('0xc0332b21a8ffe950c2632c65bcbde555b568562c');
     expect(balance).is.equal('1');
   }).timeout(5000);
 });

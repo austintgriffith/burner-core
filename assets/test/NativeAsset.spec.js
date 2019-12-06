@@ -16,6 +16,7 @@ describe('NativeAsset', () => {
       value: ONE_ETH,
       input: '0x54657374',
       hash: TX_HASH,
+      blockNumber: 3,
     }
   };
 
@@ -105,6 +106,8 @@ describe('NativeAsset', () => {
   it('should parse queried transactions', async () => {
     asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
     asset.setCore(testCore);
+
+    blocks[3] = { timestamp: Date.now() / 1000 };
 
     const tx = await asset.getTx(TX_HASH);
 
