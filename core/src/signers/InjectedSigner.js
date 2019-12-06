@@ -4,21 +4,24 @@ const Signer = require('./Signer');
 const arrayEquals = (a, b) => a.length === b.length && a.every((val, i) => val === b[i]);
 
 class InjectedSigner extends Signer {
-  constructor() {
-    super();
+  constructor({ autoEnable = false, provider = null }={}) {
+    super({ id: 'injected' });
     this.accounts = [];
-    if (this.isAvailable()) {
-      this.web3 = new Web3(this._provider());
+    this._provider = provider;
+
+    const _provider = this.provider();
+    if (_provider) {
+      this.web3 = new Web3(_provider);
       this.updateAccounts();
 
-      if (window.ethereum && window.ethereum.enable) {
-        window.ethereum.enable().then(() => this.updateAccounts());
+      if (autoEnable && _provider.enable) {
+        this.enable();
       }
     }
   }
 
   isAvailable() {
-    return !!(window.ethereum || (window.web3 && window.web3.currentProvider));
+    return !!this.provider() && this.accounts.length > 0;
   }
 
   signTx(tx) {
@@ -30,7 +33,25 @@ class InjectedSigner extends Signer {
   }
 
   shouldSkipSigning() {
-    return !!this._provider().isMetaMask;
+    return !!this.provider().isMetaMask;
+  }
+
+  permissions() {
+    return this.accounts.length === 0 && this.provider().enable ? ['enable'] : [];
+  }
+
+  invoke(action, account, ...params) {
+    switch (action) {
+      case 'enable':
+        return this.enable();
+      default:
+        throw new Error(`Unknown action ${action}`);
+    }
+  }
+
+  async enable() {
+    await this.provider().enable();
+    await this.updateAccounts();
   }
 
   async updateAccounts() {
@@ -42,8 +63,8 @@ class InjectedSigner extends Signer {
     }
   }
 
-  _provider() {
-    return window.ethereum || window.web3.currentProvider;
+  provider() {
+    return this._provider || window.ethereum || (window.web3 && window.web3.currentProvider);
   }
 }
 
