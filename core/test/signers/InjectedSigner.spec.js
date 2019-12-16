@@ -28,4 +28,10 @@ describe('InjectedSigner', () => {
     expect(injectedSigner.getAccounts()[0]).to.equal(TEST_ACCOUNT)
     expect(injectedSigner.permissions()).to.not.contain('enable');
   });
+
+  it('should graciously handle no provider', () => {
+    const injectedSigner = new InjectedSigner();
+    expect(injectedSigner.isAvailable()).to.be.false;
+    expect(injectedSigner.permissions().length).to.equal(0);
+  });
 });

@@ -37,7 +37,8 @@ class InjectedSigner extends Signer {
   }
 
   permissions() {
-    return this.accounts.length === 0 && this.provider().enable ? ['enable'] : [];
+    const canEnable = this.accounts.length === 0 && (this.provider() || {}).enable;
+    return canEnable ? ['enable'] : [];
   }
 
   invoke(action, account, ...params) {
