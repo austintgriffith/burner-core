@@ -1,6 +1,14 @@
 const Gateway = require('./Gateway');
 
 class InjectedGateway extends Gateway {
+  constructor() {
+    super();
+    const provider = this._provider();
+    if (provider) {
+      provider.autoRefreshOnNetworkChange = false;
+    }
+  }
+
   isAvailable() {
     return !!window.ethereum || !!(window.web3 && window.web3.currentProvider);
   }
