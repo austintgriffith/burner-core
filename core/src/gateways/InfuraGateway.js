@@ -28,12 +28,21 @@ class InfuraGateway extends Gateway {
 
   _provider(network) {
     if (!this.providers[network]) {
-      if (!this.providerStrings[network]) {
-        throw new Error(`Network ${network} not supported by InfuraGateway`);
-      }
-      this.providers[network] = new Web3.providers.WebsocketProvider(this.providerStrings[network]);
+      this._makeProvider(network);
     }
     return this.providers[network];
+  }
+
+  _makeProvider(network) {
+    if (!this.providerStrings[network]) {
+      throw new Error(`Network ${network} not supported by InfuraGateway`);
+    }
+
+    this.providers[network] = new Web3.providers.WebsocketProvider(this.providerStrings[network]);
+    this.providers[network].on('end', e => {
+      console.log('WS closed. Attempting to reconnect...');
+      this._makeProvider(network);
+    });
   }
 
   send(network, payload) {
