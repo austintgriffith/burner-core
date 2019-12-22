@@ -21,5 +21,5 @@ export default class Signer {
   shouldSkipSigning(): boolean;
   onAccountChange(callback: () => void): void;
   permissions(): string[];
-  invoke(action: string, account: string): any;
+  invoke(action: string, account: string, ...params: any[]): any;
 }
