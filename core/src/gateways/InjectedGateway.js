@@ -10,7 +10,7 @@ class InjectedGateway extends Gateway {
   }
 
   isAvailable() {
-    return !!window.ethereum || !!(window.web3 && window.web3.currentProvider);
+    return !!this._provider();
   }
 
   getNetworks() {
@@ -18,7 +18,7 @@ class InjectedGateway extends Gateway {
   }
 
   _provider() {
-    return window.ethereum || window.web3.currentProvider;
+    return window.ethereum || (window.web3 && window.web3.currentProvider);
   }
 
   send(network, payload) {
