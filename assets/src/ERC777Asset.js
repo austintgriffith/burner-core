@@ -5,9 +5,10 @@ const canRelay = require('./utils/canRelay');
 const BLOCK_LOOKBACK = 250;
 
 class ERC777Asset extends ERC20Asset {
-  constructor({ abi=IERC777abi, ...params }) {
+  constructor({ abi=IERC777abi, gasless=false, ...params }) {
     super({ ...params, type: 'erc777' });
     this.abi = abi;
+    this.gasless = gasless;
     this._gaslessContract = null;
   }
 
@@ -80,7 +81,7 @@ class ERC777Asset extends ERC20Asset {
   async _send({ from, to, value, message }) {
     const web3 = this.getWeb3();
     const messageHex = message ? this.getWeb3().utils.fromUtf8(message) : '0x';
-    const gasless = await canRelay(web3, this.address, from);
+    const gasless = this.gasless && await canRelay(web3, this.address, from);
     const contract = gasless ? this.getGaslessContract() : this.getContract();
     const receipt = await contract.methods.send(to, value, messageHex).send({ from });
     return {
