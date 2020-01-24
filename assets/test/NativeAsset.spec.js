@@ -19,6 +19,9 @@ describe('NativeAsset', () => {
       blockNumber: 3,
     }
   };
+  let transactionReceipts = {
+    [TX_HASH]: { logs: [] },
+  };
 
   const testCore = {
     addHistoryEvent(event) {
@@ -47,6 +50,7 @@ describe('NativeAsset', () => {
           };
         },
         getTransaction: hash => transactions[hash] || null,
+        getTransactionReceipt: hash => transactionReceipts[hash] || null,
       },
       utils: web3Utils,
     }),
@@ -117,6 +121,13 @@ describe('NativeAsset', () => {
     expect(tx.value).to.equal(ONE_ETH);
     expect(tx.displayValue).to.equal('1');
     expect(tx.message).to.equal('Test');
+  });
+
+  it('should parse queried containing a contract transfer', async () => {
+    asset = new NativeAsset({id: 'test', name: 'Test', network: '1337'});
+    asset.setCore(testCore);
+
+
   });
 
   it('should watch for receiving coins', (done) => {

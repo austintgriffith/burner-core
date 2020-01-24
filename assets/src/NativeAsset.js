@@ -1,7 +1,9 @@
-const { toBN } = require('web3-utils');
+const { toBN, toChecksumAddress, padLeft } = require('web3-utils');
 const Asset = require('./Asset');
 
 const POLL_INTERVAL = 2500;
+
+const TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
 
 class NativeAsset extends Asset {
   constructor({ pollInterval=POLL_INTERVAL, ...props }) {
@@ -43,6 +45,28 @@ class NativeAsset extends Asset {
   async scanBlocks(address, startBlock, toBlock) {
     const _address = address.toLowerCase();
     const web3 = this.getWeb3();
+
+    const logs = await web3.eth.getPastLogs({
+      fromBlock: startBlock,
+      toBlock,
+      address,
+      topics: [TRANSFER_TOPIC],
+    });
+    for (log of logs) {
+      const parsedLog = this.getTransferLog([log]);
+      this.core.addHistoryEvent({
+        asset: this.id,
+        assetName: this.name,
+        type: 'send',
+        from: log.args.from,
+        to: log.args.to,
+        value: log.args.value,
+        displayValue: this.getDisplayValue(log.args.value),
+        message: null,
+        timestamp: await this._getBlockTimestamp(log.blockNumber),
+      })
+    }
+
     const blockNums = [];
     for (let blockNum = startBlock; blockNum <= toBlock; blockNum += 1) {
       blockNums.push(blockNum);
@@ -104,9 +128,27 @@ class NativeAsset extends Asset {
 
   async getTx(txHash) {
     const web3 = this.getWeb3();
-    const tx = await web3.eth.getTransaction(txHash);
-    if (!tx) {
+    const [tx, receipt] = await Promise.all([
+      web3.eth.getTransaction(txHash),
+      web3.eth.getTransactionReceipt(txHash),
+    ]);
+
+    if (!tx || !receipt) {
       return null;
+    }
+
+    if (receipt.logs.length > 0 && this.getTransferLog(receipt)) {
+      const log = this.getTransferLog(receipt);
+      return {
+        asset: this.id,
+        assetName: this.name,
+        from: log.args.from,
+        to: log.args.to,
+        value: log.args.value,
+        displayValue: this.getDisplayValue(log.args.value),
+        message: null,
+        timestamp: await this._getBlockTimestamp(log.blockNumber),
+      }
     }
 
     return {
@@ -119,6 +161,25 @@ class NativeAsset extends Asset {
       message: tx.input.length > 2 ? web3.utils.toUtf8(tx.input) : null,
       timestamp: await this._getBlockTimestamp(tx.blockNumber),
     };
+  }
+
+  getTransferLog(logs) {
+    for (const log of logs) {
+      if (log.topics[0] === TRANSFER_TOPIC && (
+        log.address === toChecksumAddress(log.topics[1].substr(26))
+        || log.address === toChecksumAddress(log.topics[2].substr(26))
+      )) {
+        return {
+          ...log,
+          args: {
+            from: toChecksumAddress(log.topics[1].substr(26),
+            to: toChecksumAddress(log.topics[2].substr(26),
+            value: 
+          },
+        };
+      }
+    }
+    return null;
   }
 }
 
