@@ -24,8 +24,9 @@ class InjectedSigner extends Signer {
     return !!this.provider() && this.accounts.length > 0;
   }
 
-  signTx(tx) {
-    return this.web3.eth.signTransaction(tx);
+  async signTx(tx) {
+    const signedTransaction = await this.web3.eth.signTransaction(tx);
+    return { ...tx, signedTransaction };
   }
 
   signMsg(msg, account) {

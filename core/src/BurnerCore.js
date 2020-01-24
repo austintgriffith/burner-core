@@ -28,6 +28,7 @@ class BurnerCore {
     this.history = new History({ assets, ...historyOptions });
 
     this.gateways = gateways;
+    this.gateways.forEach(gateway => gateway.setCore(this));
     this.assets = assets;
     this.assets.forEach(asset => {
       asset.setCore(this);
@@ -105,7 +106,10 @@ class BurnerCore {
   async handleRequest(network, payload) {
     for (const gateway of this.gateways) {
       if (gateway.isAvailable() && gateway.getNetworks().indexOf(network) !== -1) {
-        const response = await gateway.send(network, payload);
+        const response = payload.method === 'eth_sendRawTransaction'
+            && payload.params[0].signedTransaction
+          ? await gateway.sendTx(network, payload)
+          : await gateway.send(network, payload);
         return response;
       }
     }

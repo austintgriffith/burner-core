@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const BurnerCore = require('../src/BurnerCore');
 const { LocalSigner } = require('../src/signers');
+const { Gateway } = require('../src/gateways');
 const ganache = require('ganache-core');
 const { toWei } = require('web3-utils');
 
@@ -8,8 +9,9 @@ const TEST_PK = '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d
 const TEST_ACCOUNT = '0x82e1dd26775c36589ca39516b34f47cffc9066d1';
 const TEST_ACCOUNT_2 = '0x7501833200a6BC6052D6f42294fc85aE9db148eA';
 
-class GanacheGateway {
+class GanacheGateway extends Gateway {
   constructor() {
+    super(['5777']);
     this.provider = ganache.provider({
       accounts: [
         { balance: toWei('1', 'ether'), secretKey: TEST_PK },
@@ -19,10 +21,6 @@ class GanacheGateway {
 
   isAvailable() {
     return true;
-  }
-
-  getNetworks() {
-    return ['5777'];
   }
 
   send(network, payload) {

@@ -20,7 +20,10 @@ class LocalSigner extends Signer {
 
   async signTx(tx) {
     const { rawTransaction } = await this.account.signTransaction(tx);
-    return rawTransaction;
+    return {
+      signedTransaction: rawTransaction,
+      ...tx,
+    };
   }
 
   async signMsg(msg) {

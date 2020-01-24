@@ -65,6 +65,9 @@ class ProxyProvider {
         core.handleRequest(network, payload)
           .then(result => {
             try {
+              if (payload.method === 'eth_sendRawTransaction' && payload.params[0].signedTransaction) {
+                payload.params = [payload.params[0].signedTransaction];
+              }
               end(null, result);
             } catch (err) {
               if (err.message !== 'Could not find block') {

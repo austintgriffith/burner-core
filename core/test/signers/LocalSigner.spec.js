@@ -29,7 +29,7 @@ describe('LocalSigner', () => {
       saveKey: false,
     });
     const result = await localSigner.signTx(tx);
-    expect(result).to.equal('0xf8638001841000000094850656b87663c4a1ab9bcc16671e73acf2dc1db78203e88025a053e910ce12b687e9697ac704dfa12862d10a8d2b9857bee31dba0818c078d343a045fc73bd56035efa3c2baa15bc32cb8cc48fbd261ea678b769595ec3ef64944f');
+    expect(result.signedTransaction).to.equal('0xf8638001841000000094850656b87663c4a1ab9bcc16671e73acf2dc1db78203e88025a053e910ce12b687e9697ac704dfa12862d10a8d2b9857bee31dba0818c078d343a045fc73bd56035efa3c2baa15bc32cb8cc48fbd261ea678b769595ec3ef64944f');
   });
 
   it('should write a PK to localstorage and cookies', async () => {
