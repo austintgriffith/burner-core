@@ -15,6 +15,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "dotenv": "^8.0.0",
+    "ganache-core": "^2.9.2",
     "mocha": "^6.1.4",
     "why-is-node-running": "^2.1.0"
   }
