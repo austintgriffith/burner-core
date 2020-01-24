@@ -1,7 +1,7 @@
 import { Asset } from '@burner-wallet/assets';
 import Web3 from 'web3';
 import { Gateway } from './gateways';
-import { Signer } from './signers';
+import Signer, { SignedTransaction } from './signers/Signer';
 import { HistoryProps } from './History';
 import HistoryEvent, { HistoryEventProps } from './HistoryEvent';
 
@@ -19,7 +19,7 @@ export default class BurnerCore {
   onAccountChange(callback: (accounts: string[]) => void): void;
   getAssets(): Asset[];
   getAccounts(): string[];
-  signTx(txParams: any): Promise<string>;
+  signTx(txParams: any): Promise<SignedTransaction>;
   signMsg(msg: string, account: string): Promise<string>;
   shouldSkipSigning(network:string, txParams:any): boolean;
   handleRequest(network: string, payload: any): Promise<void>;
