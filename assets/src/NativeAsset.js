@@ -1,4 +1,4 @@
-const { toBN, toChecksumAddress, padLeft } = require('web3-utils');
+const { toBN, toChecksumAddress, padLeft, hexToNumberString } = require('web3-utils');
 const Asset = require('./Asset');
 
 const POLL_INTERVAL = 2500;
@@ -138,7 +138,7 @@ class NativeAsset extends Asset {
     }
 
     if (receipt.logs.length > 0 && this.getTransferLog(receipt)) {
-      const log = this.getTransferLog(receipt);
+      const log = this.getTransferLog(receipt.logs);
       return {
         asset: this.id,
         assetName: this.name,
@@ -172,9 +172,9 @@ class NativeAsset extends Asset {
         return {
           ...log,
           args: {
-            from: toChecksumAddress(log.topics[1].substr(26),
-            to: toChecksumAddress(log.topics[2].substr(26),
-            value: 
+            from: toChecksumAddress(log.topics[1].substr(26)),
+            to: toChecksumAddress(log.topics[2].substr(26)),
+            value: hexToNumberString(log.data),
           },
         };
       }
