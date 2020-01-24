@@ -16,6 +16,7 @@ class InfuraGateway extends Gateway {
       '42': `wss://kovan.infura.io/ws/v3/${infuraKey}`,
     }
     this.providers = {};
+    this.stopping = false;
   }
 
   isAvailable() {
@@ -40,8 +41,10 @@ class InfuraGateway extends Gateway {
 
     this.providers[network] = new Web3.providers.WebsocketProvider(this.providerStrings[network]);
     this.providers[network].on('end', e => {
-      console.log('WS closed. Attempting to reconnect...');
-      this._makeProvider(network);
+      if (!this.stopping) {
+        console.log('WS closed. Attempting to reconnect...');
+        this._makeProvider(network);
+      }
     });
   }
 
@@ -61,6 +64,7 @@ class InfuraGateway extends Gateway {
   }
 
   stop() {
+    this.stopping = true;
     Object.values(this.providers).forEach(provider => provider.disconnect());
   }
 }
