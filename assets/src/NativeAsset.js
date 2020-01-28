@@ -52,18 +52,18 @@ class NativeAsset extends Asset {
       address,
       topics: [TRANSFER_TOPIC],
     });
-    for (log of logs) {
+    for (let log of logs) {
       const parsedLog = this.getTransferLog([log]);
       this.core.addHistoryEvent({
         asset: this.id,
         assetName: this.name,
         type: 'send',
-        from: log.args.from,
-        to: log.args.to,
-        value: log.args.value,
-        displayValue: this.getDisplayValue(log.args.value),
+        from: parsedLog.args.from,
+        to: parsedLog.args.to,
+        value: parsedLog.args.value,
+        displayValue: this.getDisplayValue(parsedLog.args.value),
         message: null,
-        timestamp: await this._getBlockTimestamp(log.blockNumber),
+        timestamp: await this._getBlockTimestamp(parsedLog.blockNumber),
       })
     }
 
@@ -137,7 +137,7 @@ class NativeAsset extends Asset {
       return null;
     }
 
-    if (receipt.logs.length > 0 && this.getTransferLog(receipt)) {
+    if (receipt.logs.length > 0 && this.getTransferLog(receipt.logs)) {
       const log = this.getTransferLog(receipt.logs);
       return {
         asset: this.id,
