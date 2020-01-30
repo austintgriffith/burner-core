@@ -83,4 +83,23 @@ describe('LocalSigner', () => {
     expect(newAccount).to.not.equal('0x82e1dd26775c36589ca39516b34f47cffc9066d1');
     expect(result).to.not.equal(TEST_PK);
   });
+
+  it('should accept a gas multiplier', async () => {
+    const tx = {
+      from: '0x82e1dd26775c36589ca39516b34f47cffc9066d1',
+      to: '0x850656b87663c4a1ab9bcc16671e73acf2dc1db7',
+      value: '0x3e8',
+      gasPrice: '0x1',
+      nonce: 0,
+      gas: '0x10000000',
+      chainId: '1',
+    };
+    const localSigner = new LocalSigner({
+      privateKey: TEST_PK,
+      saveKey: false,
+      gasMultiplier: 1.5,
+    });
+    const result = await localSigner.signTx(tx);
+    expect(result.gas.toNumber()).to.equal(0x18000000);
+  });
 });

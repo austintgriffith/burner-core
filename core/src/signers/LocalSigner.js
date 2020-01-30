@@ -1,11 +1,13 @@
 const Web3 = require('web3');
+const { toBN } = require('web3-utils');
 const cookies = require('../lib/cookies');
 const Signer = require('./Signer');
 
 class LocalSigner extends Signer {
-  constructor({ privateKey, saveKey=true } = {}) {
+  constructor({ privateKey, saveKey=true, gasMultiplier=1 } = {}) {
     super({ id: 'local' });
     this._saveKey = saveKey;
+    this.gasMultiplier = gasMultiplier;
 
     if (this._isValidPK(privateKey)) {
       this._generateAccountFromPK(privateKey);
@@ -19,11 +21,17 @@ class LocalSigner extends Signer {
   }
 
   async signTx(tx) {
+    const _tx = { ...tx };
+
+    if (this.gasMultiplier !== 1) {
+      const multiplier = Math.floor(this.gasMultiplier * 1000).toString();
+      _tx.gas = toBN(tx.gas).mul(toBN(multiplier)).div(toBN('1000'));
+    }
+
     const { rawTransaction } = await this.account.signTransaction(tx);
-    return {
-      signedTransaction: rawTransaction,
-      ...tx,
-    };
+    _tx.signedTransaction = rawTransaction;
+
+    return _tx;
   }
 
   async signMsg(msg) {
