@@ -21,14 +21,25 @@ class LocalSigner extends Signer {
   }
 
   async signTx(tx) {
-    const _tx = { ...tx };
+    const _tx = {
+      ...tx,
+
+      // Workaround for https://github.com/ethereumjs/ethereumjs-tx/pull/195
+      common: {
+        customChain: {
+          chainId: tx.chainId,
+          networkId: tx.chainId,
+        },
+        hardfork: 'istanbul',
+      },
+    };
 
     if (this.gasMultiplier !== 1) {
       const multiplier = Math.floor(this.gasMultiplier * 1000).toString();
       _tx.gas = toBN(tx.gas).mul(toBN(multiplier)).div(toBN('1000'));
     }
 
-    const { rawTransaction } = await this.account.signTransaction(tx);
+    const { rawTransaction } = await this.account.signTransaction(_tx);
     _tx.signedTransaction = rawTransaction;
 
     return _tx;
