@@ -62,12 +62,24 @@ class ProxyProvider {
 
     this.engine.addProvider({
       handleRequest(payload, next, end) {
+        // Workaround for https://github.com/MetaMask/eth-block-tracker/pull/42
+        let fakeId = false;
+        if (payload.id === 1) {
+          payload.id = Math.floor(Math.random() * 10000000000);
+          fakeId = 1;
+        }
+
         core.handleRequest(network, payload)
           .then(result => {
             try {
               if (payload.method === 'eth_sendRawTransaction' && payload.params[0].signedTransaction) {
                 payload.params = [payload.params[0].signedTransaction];
               }
+
+              if (fakeId) {
+                result.id = 1;
+              }
+
               end(null, result);
             } catch (err) {
               if (err.message !== 'Could not find block') {
