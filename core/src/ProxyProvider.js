@@ -76,10 +76,6 @@ class ProxyProvider {
                 payload.params = [payload.params[0].signedTransaction];
               }
 
-              if (fakeId) {
-                result.id = 1;
-              }
-
               end(null, result);
             } catch (err) {
               if (err.message !== 'Could not find block') {
