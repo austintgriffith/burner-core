@@ -39,7 +39,7 @@ class LocalSigner extends Signer {
   }
 
   permissions() {
-    return ['readKey', 'writeKey', 'burn'];
+    return ['readKey', 'writeKey', 'burn', 'keyToAddress'];
   }
 
   invoke(action, account, ...params) {
@@ -57,6 +57,10 @@ class LocalSigner extends Signer {
       case 'burn':
         this._generateNewAccount();
         return this.account.address;
+      case 'keyToAddress':
+        const [pk] = params;
+        const { address } = (new Web3()).eth.accounts.privateKeyToAccount(pk);
+        return address;
       default:
         throw new Error(`Unknown action ${action}`);
     }

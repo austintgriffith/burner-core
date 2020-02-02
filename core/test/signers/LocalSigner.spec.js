@@ -3,6 +3,9 @@ const LocalSigner = require('../../src/signers/LocalSigner');
 
 describe('LocalSigner', () => {
   const TEST_PK = '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d5c9';
+  const TEST_ACCOUNT = '0x82e1dd26775c36589ca39516b34f47cffc9066d1';
+  const TEST_PK_2 = '0xc95c6d20e8f998b2054d049862cbccfc18d22d5c994925e481cb81db7aae12fd';
+  const TEST_ACCOUNT_2 = '0x7501833200a6BC6052D6f42294fc85aE9db148eA';
 
   beforeEach(() => {
     const _localstorage = new Map()
@@ -57,6 +60,13 @@ describe('LocalSigner', () => {
     });
     const result = localSigner.invoke('readKey','0x82e1dd26775c36589ca39516b34f47cffc9066d1');
     expect(result).to.equal(TEST_PK);
+  });
+
+  it('should preview a new private key', () => {
+    const localSigner = new LocalSigner({ privateKey: TEST_PK, saveKey: false });
+    const newAddress = localSigner.invoke('keyToAddress', TEST_ACCOUNT, TEST_PK_2);
+
+    expect(newAddress).to.equal(TEST_ACCOUNT_2);
   });
 
   it('should set a new private key', () => {
