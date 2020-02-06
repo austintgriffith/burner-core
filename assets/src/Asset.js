@@ -89,7 +89,13 @@ class Asset {
       this.getBalance(address),
       this.getSendFee(address),
     ]);
-    return toBN(balance).sub(toBN(sendFee)).toString();
+    const maximum = toBN(balance).sub(toBN(sendFee)).toString();
+
+    if (maximum.charAt(0) === '-') {
+      return '0';
+    }
+
+    return maximum;
   }
 
   async getSendFee() {
