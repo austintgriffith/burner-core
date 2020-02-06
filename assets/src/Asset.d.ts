@@ -29,7 +29,7 @@ export default class Asset {
   getUSDValue(value: string, decimals?: number): string;
   getBalance(account: string): Promise<string>;
   getDisplayBalance(account: string, decimals?: number): Promise<string>;
-  getMaximumSendableBalance(account: string): Promise<string>;
+  getMaximumSendableBalance(account: string, recipient?: string): Promise<string>;
   send(params: SendParams): Promise<any>;
   supportsMessages(): boolean;
   getWeb3(): any;

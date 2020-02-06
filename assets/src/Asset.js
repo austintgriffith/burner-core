@@ -84,10 +84,10 @@ class Asset {
     return response;
   }
 
-  async getMaximumSendableBalance(address) {
+  async getMaximumSendableBalance(address, recipient='0x1111111111111111111111111111111111111111') {
     const [balance, sendFee] = await Promise.all([
       this.getBalance(address),
-      this.getSendFee(address),
+      this.getSendFee(address, recipient),
     ]);
     const maximum = toBN(balance).sub(toBN(sendFee)).toString();
 
