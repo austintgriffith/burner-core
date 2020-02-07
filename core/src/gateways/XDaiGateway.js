@@ -27,6 +27,10 @@ class xDaiGateway extends Gateway {
         return reject(new Error('xDai does not support this network'));
       }
 
+      if (payload.method === 'eth_gasPrice') {
+        return resolve('0x3b9aca00'); // 1 gwei
+      }
+
       this._provider(network).send(payload, (err, response) => {
         if (err) {
           return reject(err);
