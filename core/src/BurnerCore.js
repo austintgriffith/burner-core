@@ -4,6 +4,7 @@ const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 const History = require('./History');
 const HistoryEvent = require('./HistoryEvent');
+const TempSigner = require('./signers/TempSigner');
 
 class BurnerCore {
   constructor({
@@ -36,6 +37,8 @@ class BurnerCore {
     });
 
     this.signers = signers;
+    this.signers.push(new TempSigner);
+
     this.unsubscribesBySigner = {};
     this.signers.forEach((signer, index) => {
       signer.setCore(this);

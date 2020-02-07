@@ -3,6 +3,7 @@ require('dotenv').config();
 const BurnerCore = require('../src/BurnerCore');
 const InjectedGateway = require('../src/gateways/InjectedGateway');
 const { LocalSigner, InjectedSigner } = require('../src/signers');
+const TestGateway = require('./TestGateway');
 
 describe('BurnerCore', () => {
   const TEST_PK = '0x2054d094925e481cb81db7aae12fd498c95c6d20e8f998b62cbccfc18d22d5c9';
@@ -19,7 +20,7 @@ describe('BurnerCore', () => {
     it('should get appropriate permissions from the LocalSigner', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
-        gateways: [new InjectedGateway()],
+        gateways: [new TestGateway()],
         historyOptions: { storeHistory: false },
       });
 
@@ -34,7 +35,7 @@ describe('BurnerCore', () => {
     it('should invoke the signer correctly', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
-        gateways: [new InjectedGateway()],
+        gateways: [new TestGateway()],
         historyOptions: { storeHistory: false },
       });
 
@@ -47,7 +48,7 @@ describe('BurnerCore', () => {
     it('should invoke signer actions by ID', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
-        gateways: [new InjectedGateway()],
+        gateways: [new TestGateway()],
         historyOptions: { storeHistory: false },
       });
 
@@ -58,6 +59,22 @@ describe('BurnerCore', () => {
       const [newAccount] = core.getAccounts();
       expect(newAccount).to.be.equal(TEST_ACCOUNT_2);
 
+    });
+
+    it('should sign messages with the temporary signer', async () => {
+      core = new BurnerCore({
+        signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
+        gateways: [new TestGateway()],
+        historyOptions: { storeHistory: false },
+      });
+
+      core.callSigner('enable', 'temp', TEST_PK_2);
+
+      const [account1, account2] = core.getAccounts();
+      expect(account2).to.be.equal(TEST_ACCOUNT_2);
+
+      const signedMessage = await core.signMsg('test', TEST_ACCOUNT_2);
+      expect(signedMessage).to.be.equal('0x7e7fe2ca210f88e8c6740f2046a9065da6b6b47130cc6a592c769b7475cbf15e3adfc03e01e06cc498cfa30ad240a7cab5840efa3f24dacbce90cfaef09e43491b');
     });
   });
 
@@ -114,7 +131,7 @@ describe('BurnerCore', () => {
     it('should read and write events from history', () => {
       core = new BurnerCore({
         signers: [new LocalSigner({ privateKey: TEST_PK, saveKey: false })],
-        gateways: [new InjectedGateway()],
+        gateways: [new TestGateway()],
         historyOptions: { storeHistory: false },
       });
       const timestamp = Math.floor(Date.now() / 1000);
