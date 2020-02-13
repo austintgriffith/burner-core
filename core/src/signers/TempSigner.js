@@ -53,6 +53,8 @@ class TempSigner extends Signer {
       case 'enable':
         this._generateAccountFromPK(newPK);
         return this.account.address;
+      case 'getAddress':
+        return this.account && this.account.address;
       default:
         throw new Error(`Unknown action ${action}`);
     }
