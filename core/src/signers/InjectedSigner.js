@@ -33,8 +33,13 @@ class InjectedSigner extends Signer {
     return this.web3.eth.sign(msg, account);
   }
 
-  shouldSkipSigning() {
-    return !!this.provider().isMetaMask;
+  shouldSkipSigning(network) {
+    const isMetaMask = !!this.provider().isMetaMask;
+    if (isMetaMask && network !== this.provider().networkVersion) {
+      throw new Error('Metamask is connected to the wrong network');
+    }
+
+    return isMetaMask;
   }
 
   permissions() {

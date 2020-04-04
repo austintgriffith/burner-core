@@ -100,7 +100,7 @@ class BurnerCore {
   shouldSkipSigning(network, txParams) {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(txParams.from)) {
-        return signer.shouldSkipSigning();
+        return signer.shouldSkipSigning(network);
       }
     }
     throw new Error('Unable to find an appropriate signer');
