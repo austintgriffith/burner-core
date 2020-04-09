@@ -2,9 +2,11 @@ export interface AssetConstructor {
   id: string;
   name: string;
   network: string;
+  type?: string;
   usdPrice?: number;
   priceSymbol?: string;
   icon?: string;
+  decimals?: decimals;
 }
 
 export interface SendParams {
@@ -21,6 +23,8 @@ export default class Asset {
   public network: string;
   public type: string | null;
   public icon: string | null;
+
+  protected core: any;
 
   constructor(props: AssetConstructor);
   setCore(core: any): void;
