@@ -6,7 +6,7 @@ export interface AssetConstructor {
   usdPrice?: number;
   priceSymbol?: string;
   icon?: string;
-  decimals?: decimals;
+  decimals?: number;
 }
 
 export interface SendParams {
