@@ -36,6 +36,8 @@ export default class Asset {
   getMaximumSendableBalance(account: string, recipient?: string): Promise<string>;
   getSendFee(): Promise<string>;
   getGrowthRate(account: string): Promise<string>;
+  startWatchingAddress(address: string): any;
+  poll(callback: Function, internal: number): any;
   send(params: SendParams): Promise<any>;
   supportsMessages(): boolean;
   getWeb3(): any;
@@ -43,4 +45,5 @@ export default class Asset {
   stop(): void;
 
   protected _send(params: SendParams): Promise<any>;
+  protected _getBlockTimestamp(blockNum: string | number): Promise<number | string>;
 }
