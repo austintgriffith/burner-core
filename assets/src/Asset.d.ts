@@ -39,4 +39,6 @@ export default class Asset {
   getWeb3(): any;
   start(): void;
   stop(): void;
+
+  protected _send(params: SendParams): Promise<any>;
 }
