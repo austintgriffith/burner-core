@@ -102,6 +102,10 @@ class Asset {
     return '0';
   }
 
+  async getGrowthRate() {
+    return '0';
+  }
+
   async _send({ from, to, value }) {
     throw new Error('send not implemented');
   }

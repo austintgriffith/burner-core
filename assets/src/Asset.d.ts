@@ -34,6 +34,8 @@ export default class Asset {
   getBalance(account: string): Promise<string>;
   getDisplayBalance(account: string, decimals?: number): Promise<string>;
   getMaximumSendableBalance(account: string, recipient?: string): Promise<string>;
+  getSendFee(): Promise<string>;
+  getGrowthRate(account: string): Promise<string>;
   send(params: SendParams): Promise<any>;
   supportsMessages(): boolean;
   getWeb3(): any;
