@@ -6,7 +6,7 @@ class InfuraGateway extends Gateway {
     super();
     this.available = !!infuraKey;
     if (!infuraKey) {
-      console.warn('Warning: InfuraGateway created without API Key. Infura will be unavailable.');
+      throw new Error('InfuraGateway created without API Key. Your project might need a .env file');
     }
     this.providerStrings = {
       '1': `wss://mainnet.infura.io/ws/v3/${infuraKey}`,
