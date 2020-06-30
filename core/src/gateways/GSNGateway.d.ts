@@ -1,4 +1,4 @@
 import Gateway from './Gateway';
 
-export default class HTTPGateway extends Gateway {
+export default class GSNGateway extends Gateway {
 }

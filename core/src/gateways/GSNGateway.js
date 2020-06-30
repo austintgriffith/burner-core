@@ -1,6 +1,6 @@
 const Gateway = require('./Gateway');
 const Web3 = require('web3');
-const tabookey = require('@dmihal/tabookey-gasless');
+const { RelayClient } = require('@opengsn/gsn');
 
 class GSNGateway extends Gateway {
   constructor() {
@@ -16,13 +16,13 @@ class GSNGateway extends Gateway {
 
   getClient(network) {
     if (!this.clients[network]) {
-      this.clients[network] = new tabookey.RelayClient(this.core.getWeb3(network), {});
+      this.clients[network] = new RelayClient(this.core.getWeb3(network), { chainId: network });
     }
     return this.clients[network];
   }
 
   async sendTx(network, payload) {
-    if (payload.params[0].useGSN) {
+    if (payload.params[0].useGSN || payload.params[0].gasless) {
       const client = this.getClient(network);
       return new Promise((resolve, reject) => {
         client.runRelay({

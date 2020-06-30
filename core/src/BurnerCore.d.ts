@@ -10,8 +10,6 @@ interface BurnerCoreConstructor {
   gateways?: Gateway[],
   assets?: Asset[],
   historyOptions?: HistoryProps,
-  gsnGasLimit?: number,
-  gsnGasPrice?: number,
 }
 
 export default class BurnerCore {

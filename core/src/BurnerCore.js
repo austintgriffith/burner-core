@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const tabookey = require('@dmihal/tabookey-gasless');
+const { RelayProvider } = require('@opengsn/gsn');
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 const History = require('./History');
@@ -12,8 +12,6 @@ class BurnerCore {
     gateways=[],
     assets=[],
     historyOptions={},
-    gsnGasLimit=5000000,
-    gsnGasPrice=1100000000
   }) {
     if (gateways.length === 0) {
       throw new Error('Must include at least 1 gateway')
@@ -21,9 +19,6 @@ class BurnerCore {
 
     this.providers = {};
     this.web3 = {};
-
-    this.gsnGasPrice = gsnGasPrice;
-    this.gsnGasLimit = gsnGasLimit;
 
     this.events = new EventEmitter();
     this.history = new History({ assets, ...historyOptions });
@@ -128,11 +123,7 @@ class BurnerCore {
     let provider = new ProxyProvider(network, this);
 
     if (options.gasless) {
-      provider = new tabookey.RelayProvider(provider, {
-        txfee: 70,
-        force_gasLimit: this.gsnGasLimit,
-        force_gasPrice: this.gsnGasPrice,
-      });
+      provider = new RelayProvider(provider, { chainId: network });
     }
 
     this.providers[cacheKey] = provider;
