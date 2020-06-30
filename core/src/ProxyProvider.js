@@ -95,6 +95,10 @@ class ProxyProvider {
     this.engine.stop();
   }
 
+  start() {
+    this.engine.start();
+  }
+
   sendAsync(...args) {
     this.engine.sendAsync.apply(this.engine, args);
   }

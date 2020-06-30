@@ -28,6 +28,7 @@ class Gateway {
   }
 
   stop() {}
+  start() {}
 }
 
 module.exports = Gateway;

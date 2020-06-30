@@ -179,6 +179,12 @@ class BurnerCore {
     this.history.removeListener(listener);
   }
 
+  start() {
+    Object.values(this.providers).forEach(provider => start.start());
+    Object.values(this.gateways).forEach(gateway => gateway.start && gateway.start());
+    this.assets.forEach(asset => asset.start && asset.start());
+  }
+
   stop() {
     Object.values(this.providers).forEach(provider => provider.stop());
     Object.values(this.gateways).forEach(gateway => gateway.stop());

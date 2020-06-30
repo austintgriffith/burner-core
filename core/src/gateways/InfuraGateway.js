@@ -66,6 +66,7 @@ class InfuraGateway extends Gateway {
   stop() {
     this.stopping = true;
     Object.values(this.providers).forEach(provider => provider.disconnect());
+    this.providers = {};
   }
 }
 

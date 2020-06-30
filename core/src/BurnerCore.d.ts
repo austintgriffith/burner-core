@@ -20,7 +20,7 @@ export default class BurnerCore {
   signTx(txParams: any): Promise<SignedTransaction>;
   signMsg(msg: string, account: string): Promise<string>;
   shouldSkipSigning(network:string, txParams:any): boolean;
-  handleRequest(network: string, payload: any): Promise<void>;
+  handleRequest(network: string, payload: any): Promise<any>;
   getProvider(network: string): any;
   getWeb3(network: string, options?: any): Web3;
   canCallSigner(action: string, account: string): boolean;
