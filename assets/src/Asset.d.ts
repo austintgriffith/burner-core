@@ -34,7 +34,7 @@ export default class Asset {
   getBalance(account: string): Promise<string>;
   getDisplayBalance(account: string, decimals?: number): Promise<string>;
   getMaximumSendableBalance(account: string, recipient?: string): Promise<string>;
-  getSendFee(): Promise<string>;
+  getSendFee(from: string, to: string): Promise<string>;
   getGrowthRate(account: string): Promise<string>;
   startWatchingAddress(address: string): any;
   poll(callback: Function, internal: number): any;

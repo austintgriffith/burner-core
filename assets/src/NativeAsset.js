@@ -105,7 +105,7 @@ class NativeAsset extends Asset {
   async getSendFee(from, to) {
     const web3 = this.getWeb3();
     const [gas, gasPrice] = await Promise.all([
-      web3.eth.estimateGas({ from, to, value: '1' }),
+      web3.eth.estimateGas({ from, to, value: '1' }).catch(() => 21000),
       web3.eth.getGasPrice(),
     ]);
     return toBN(gas).mul(toBN(gasPrice)).toString();
