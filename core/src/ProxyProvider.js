@@ -52,7 +52,12 @@ class ProxyProvider {
           core.signMsg(data, from)
             .then(signature => cb(null, signature))
             .catch(err => cb(err));
-        }
+        },
+        signTypedMessage({ data, from }, cb) {
+          core.signMsg(data, from, 'typed')
+            .then(signature => cb(null, signature))
+            .catch(err => cb(err));
+        },
       })
     );
 

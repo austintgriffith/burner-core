@@ -82,11 +82,18 @@ class BurnerCore {
     throw new Error('Unable to find an appropriate signer');
   }
 
-  async signMsg(msg, account) {
+  async signMsg(msg, account, type='normal') {
     for (const signer of this.signers) {
       if (signer.isAvailable() && signer.hasAccount(account)) {
-        const signed = await signer.signMsg(msg, account);
-        return signed;
+        if (type === 'typed') {
+          if (signer.signTypedMsg) {
+            return await signer.signTypedMsg(msg, account);
+          } else {
+            throw new Error(`Signer doesn't support typed signing`);
+          }
+        }
+
+        return await signer.signMsg(msg, account);
       }
     }
     throw new Error('Unable to find an appropriate signer');

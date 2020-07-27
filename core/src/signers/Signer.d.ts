@@ -30,6 +30,7 @@ export default class Signer {
   hasAccount(account: string): boolean;
   signTx(tx: any): Promise<SignedTransaction>;
   signMsg(message: any, account: string): Promise<string>;
+  signTypedMsg(message: any, account: string): Promise<string>;
   shouldSkipSigning(): boolean;
   onAccountChange(callback: () => void): void;
   permissions(): string[];

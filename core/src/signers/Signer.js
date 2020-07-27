@@ -31,7 +31,11 @@ class Signer {
   }
 
   signMsg() {
-    throw new Error('singMsg() not implemented');
+    throw new Error('signMsg() not implemented');
+  }
+
+  signTypedMsg() {
+    throw new Error('signTypedMsg not implemented');
   }
 
   shouldSkipSigning() {

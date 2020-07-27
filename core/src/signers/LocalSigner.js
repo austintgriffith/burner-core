@@ -2,6 +2,8 @@ const Web3 = require('web3');
 const { toBN } = require('web3-utils');
 const cookies = require('../lib/cookies');
 const Signer = require('./Signer');
+const sigUtil = require('eth-sig-util');
+const { toBuffer } = require('ethereumjs-util');
 
 class LocalSigner extends Signer {
   constructor({ privateKey, saveKey=true, gasMultiplier=1 } = {}) {
@@ -47,6 +49,13 @@ class LocalSigner extends Signer {
 
   async signMsg(msg) {
     return this.account.sign(msg).signature;
+  }
+
+  async signTypedMsg(msg) {
+    const data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+
+    const signed = sigUtil.signTypedData_v4(toBuffer(this.account.privateKey), { data });
+    return signed;
   }
 
   permissions() {
