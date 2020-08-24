@@ -1,6 +1,5 @@
 const ERC20Asset = require('./ERC20Asset');
 const IERC777abi = require('./abi/IERC777.json');
-const canRelay = require('./utils/canRelay');
 
 const BLOCK_LOOKBACK = 250;
 
@@ -14,14 +13,6 @@ class ERC777Asset extends ERC20Asset {
 
   supportsMessages() {
     return true;
-  }
-
-  getGaslessContract() {
-    if (!this._gaslessContract) {
-      const Contract = this.getWeb3({ gasless: true }).eth.Contract;
-      this._gaslessContract = new Contract(this.abi, this.address);
-    }
-    return this._gaslessContract;
   }
 
   async getTx(txHash) {
@@ -81,9 +72,10 @@ class ERC777Asset extends ERC20Asset {
   async _send({ from, to, value, message }) {
     const web3 = this.getWeb3();
     const messageHex = message ? this.getWeb3().utils.fromUtf8(message) : '0x';
-    const gasless = this.gasless && await canRelay(web3, this.address, from);
-    const contract = gasless ? this.getGaslessContract() : this.getContract();
-    const receipt = await contract.methods.send(to, value, messageHex).send({ from });
+    const receipt = await this.getContract().methods.send(to, value, messageHex).send({
+      from,
+      gasless: this.gasless,
+    });
     return {
       ...receipt,
       txHash: receipt.transactionHash,
