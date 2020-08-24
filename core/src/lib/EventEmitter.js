@@ -15,6 +15,10 @@ class EventEmitter {
     }
     this.listeners[event].push(callback);
   }
+
+  removeAllListeners() {
+    this.listeners = {};
+  }
 }
 
 module.exports = EventEmitter;
