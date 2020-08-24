@@ -1,5 +1,4 @@
 const Web3 = require('web3');
-const { RelayProvider } = require('@opengsn/gsn');
 const ProxyProvider = require('./ProxyProvider');
 const EventEmitter = require('./lib/EventEmitter');
 const History = require('./History');
@@ -121,30 +120,20 @@ class BurnerCore {
     throw new Error(`Could not find gateway for network ${network}`);
   }
 
-  getProvider(network, options={}) {
-    const cacheKey = options.gasless ? `${network}-gasless` : network;
-    if (this.providers[cacheKey]) {
-      return this.providers[cacheKey];
+  getProvider(network) {
+    if (!this.providers[network]) {
+      this.providers[network] = new ProxyProvider(network, this);
     }
 
-    let provider = new ProxyProvider(network, this);
-
-    if (options.gasless) {
-      provider = new RelayProvider(provider, { chainId: network });
-    }
-
-    this.providers[cacheKey] = provider;
-    return provider;
+    return this.providers[network];
   }
 
-  getWeb3(network, options={}) {
-    const cacheKey = options.gasless ? `${network}-gasless` : network;
-    if (this.web3[cacheKey]) {
-      return this.web3[cacheKey];
+  getWeb3(network) {
+    if (!this.web3[network]) {
+      this.web3[network] = new Web3(this.getProvider(network));
     }
 
-    this.web3[cacheKey] = new Web3(this.getProvider(network, options));
-    return this.web3[cacheKey];
+    return this.web3[network];
   }
 
   canCallSigner(action, account) {
