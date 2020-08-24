@@ -40,10 +40,23 @@ class BurnerCore {
       this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
 
       signer.onAccountChange(() => {
-        this.unsubscribesBySigner[index].forEach(unsubscribe => unsubscribe());
-        this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
+        this.startAccountWatching();
         this.events.emit('accountChange');
       });
+    });
+  }
+
+  startAccountWatching() {
+    this.signers.forEach((signer, index) => {
+      this.unsubscribesBySigner[index].forEach(unsubscribe => unsubscribe());
+      this.unsubscribesBySigner[index] = this.watchAccounts(signer.getAccounts());
+    });
+  }
+
+  stopAccountWatching() {
+    this.signers.forEach((signer, index) => {
+      this.unsubscribesBySigner[index].forEach(unsubscribe => unsubscribe());
+      this.unsubscribesBySigner[index] = [];
     });
   }
 

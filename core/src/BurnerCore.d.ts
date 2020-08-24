@@ -26,6 +26,9 @@ export default class BurnerCore {
   canCallSigner(action: string, account: string): boolean;
   callSigner(action: string, account: string, ...params: any[]): any;
 
+  startAccountWatching(): void;
+  stopAccountWatching(): void;
+
   addHistoryEvent(eventProps: HistoryEventProps): void;
   getHistoryEvents(options: any): HistoryEvent[];
   onHistoryEvent(listener: (event: HistoryEvent) => void): void;
