@@ -1,6 +1,6 @@
 {
   "name": "@burner-wallet/core",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "license": "MIT",
   "scripts": {
     "distribute": "./scripts/publish.sh",
