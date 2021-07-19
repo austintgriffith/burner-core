@@ -16,7 +16,7 @@ class xDaiGateway extends Gateway {
 
   _provider(network) {
     if (!this._w3Provider) {
-      this._w3Provider = new Web3.providers.HttpProvider('https://dai.poa.network');;
+      this._w3Provider = new Web3.providers.WebsocketProvider('wss://rpc.xdaichain.com/wss');
     }
     return this._w3Provider;
   }
